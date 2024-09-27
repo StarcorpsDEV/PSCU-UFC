@@ -82,6 +82,21 @@ const Home: NextPage = () => {
   // Without it we can only read data, not write.
   const signer = provider?.getSigner();
 
+  type DelegateState = 'delegating' | 'delegated' | 'delegate';
+
+  function getSubmitButtonText(delegateState: DelegateState) {
+    switch (delegateState) {
+      case 'delegating':
+        return 'Delegating...';
+      case 'delegated':
+        return 'Delegated';
+      case 'delegate':
+        return 'Delegate';
+      default:
+        throw new Error('Unknown delegate state');
+    }
+  }
+  
   async function verifyNFT() {
     bundleDropModule
       .balanceOf(bundleDropModule.address, '0')
@@ -358,10 +373,41 @@ const Home: NextPage = () => {
     } finally {
       // in *either* case we need to set the isVoting state to false to enable the button again
       setIsVoting(false);
-      toast.dismiss(toastId);
+      setTimeout(()=>{toast.dismiss(toastId)},3000);
     }
   }
 
+
+  async function delegate() {
+    if (!address || isVoting || hasVoted) {
+      return;
+    }
+
+    const toastId = address;
+
+    //before we do async things, we want to disable the button to prevent double clicks
+    setIsVoting(true);
+    toast.info('🔨 Delegating...', { toastId, autoClose: false });
+
+    try {
+      //we'll check if the wallet still needs to delegate their tokens before they can vote
+      const delegation = await tokenModule.getDelegationOf(address);
+      // if the delegation is the 0x0 address that means they have not delegated their governance tokens yet
+      if (delegation === ethers.constants.AddressZero) {
+        await tokenModule.delegateTo(address);
+      }
+ 
+    } catch (err) {
+      console.error('failed to delegate tokens');
+      toast.error('Failed to delegate tokens');
+    } finally {
+      // in *either* case we need to set the isVoting state to false to enable the button again
+      setIsVoting(false);
+      setTimeout(()=>{toast.dismiss(toastId)},3000);
+    }
+  }
+
+  const delegateState = hasVoted ? 'delegated' : isVoting ? 'delegating' : 'delegate';
   const votingState = hasVoted ? 'voted' : isVoting ? 'voting' : 'vote';
   const displayContents =
     hasMetaMask && address && error?.name !== 'UnsupportedChainIdError';
@@ -389,7 +435,7 @@ const Home: NextPage = () => {
         wallet = $('#newMemberAddress').val();
         amount = $('#newMemberAmount').val();
       } else {
-        console.log('error');
+        toast.error('Wrong input parameters')
         return;
       }
       await voteModule.propose(
@@ -411,7 +457,7 @@ const Home: NextPage = () => {
       console.error('failed to create first proposal', error);
     } finally {
       setIsClaiming(false);
-      toast.dismiss(toastId);
+      setTimeout(()=>{toast.dismiss(toastId)},3000);
     }
   };
 
@@ -441,7 +487,7 @@ const Home: NextPage = () => {
         amount = $('#senderc20Amount').val();
         contractInput = $('#senderc20Contract').val();
       } else {
-        console.log('error');
+        toast.error('Wrong input parameters')
         return;
       }
       await voteModule.propose(
@@ -474,7 +520,7 @@ const Home: NextPage = () => {
       console.error('failed to create proposal', error);
     } finally {
       setIsClaiming(false);
-      toast.dismiss(toastId);
+      setTimeout(()=>{toast.dismiss(toastId)},3000);
     }
   };
 
@@ -504,7 +550,7 @@ const Home: NextPage = () => {
         tokenid = $('#senderc721TokenId').val();
         contractInput = $('#senderc721Contract').val();
       } else {
-        console.log('error');
+        toast.error('Wrong input parameters')
         return;
       }
       await voteModule.propose(
@@ -536,7 +582,7 @@ const Home: NextPage = () => {
       console.error('failed to create proposal', error);
     } finally {
       setIsClaiming(false);
-      toast.dismiss(toastId);
+      setTimeout(()=>{toast.dismiss(toastId)},3000);
     }
   };
   const disabled = !address ? { 'aria-disabled': true } : {};
@@ -601,8 +647,7 @@ const Home: NextPage = () => {
                 </Box>
                 <Box style={{ textAlign: 'center' }}>
                   <p>
-                    To join the PSCU contact us on the community Discord. This
-                    organisation manage the emission of UFC Coin (UFCC):
+                    This organisation manage the DAO treasury and the emission of UFC Coin (UFCC) on Avalanche:
                     <em>
                       <a
                         sx={{
@@ -861,6 +906,14 @@ const Home: NextPage = () => {
                     }
                   </details>
                 </form>
+                <div sx={{marginTop:'16px' }}>
+                  <span sx={{ width: '100%'}}>
+                  <Button {...disabled} onClick={() => !isClaiming && delegate()} sx={{ width: '100%' }}>
+                  {getSubmitButtonText(delegateState)}
+                  </Button>
+                      To make proposals you need to have at least 1000 UFCC delegated. Click "Delegate" button to delegate (to do once).
+                  </span>
+                </div>
               </div>
 
               <DaoProposals
