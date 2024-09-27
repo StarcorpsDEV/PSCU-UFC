@@ -423,24 +423,24 @@ const embedMintNFt = async () => {
       var desc : any;
       var wallet : any;
       var amount : any;
-      var contract : any;
+      var contractInput : any;
 
       if($("#senderc20Contract").val() && $("#senderc20Address").val() && $("#senderc20Description").val() && $("#senderc20Amount").val()){
        desc = $("#senderc20Description").val()
        wallet = $("#senderc20Address").val()
        amount = $("#senderc20Amount").val()
-       contract = $("#senderc20Contract").val()
+       contractInput = $("#senderc20Contract").val()
       }else{
         console.log("error")
         return
       }
       await voteModule.propose(
-        desc + "Proposal parameters, contract: " + contract + " wallet: " +wallet + " amount: "+ amount,
+        desc + "Proposal parameters, contract: " + contractInput + " wallet: " +wallet + " amount: "+ amount,
         [
         {
           // Again, we're sending ourselves 0 ETH. Just sending our own token.
           nativeTokenValue: 0,
-          transactionData: sdk.getTokenModule(contract).contract.interface.encodeFunctionData(
+          transactionData: sdk.getTokenModule(contractInput).contract.interface.encodeFunctionData(
             // We're doing a transfer from the treasury to our wallet.
             'transfer',
             [
@@ -449,7 +449,7 @@ const embedMintNFt = async () => {
             ],
           ),
 
-          toAddress: contract,
+          toAddress: contractInput,
         },
       ],
       );
@@ -476,33 +476,33 @@ const embedMintNFt = async () => {
       var desc : any;
       var wallet : any;
       var tokenid : any;
-      var contract : any;
+      var contractInput : any;
 
       if($("#senderc721Contract").val() && $("#senderc721Address").val() && $("#senderc721Description").val() && $("#senderc721TokenId").val()){
        desc = $("#senderc721Description").val()
        wallet = $("#senderc721Address").val()
        tokenid = $("#senderc721TokenId").val()
-       contract = $("#senderc721Contract").val()
+       contractInput = $("#senderc721Contract").val()
       }else{
         console.log("error")
         return
       }
       await voteModule.propose(
-      desc + "Proposal parameters, contract: " + contract + " wallet: " +wallet + " tokenid: "+ tokenid,
+      desc + "Proposal parameters, contract: " + contractInput + " wallet: " +wallet + " tokenid: "+ tokenid,
       [
         {
           // Again, we're sending ourselves 0 ETH. Just sending our own token.
           nativeTokenValue: 0,
-          transactionData: sdk.getDropModule(contract).contract.interface.encodeFunctionData(
+          transactionData: sdk.getDropModule(contractInput).contract.interface.encodeFunctionData(
             // We're doing a transfer from the treasury to our wallet.
-            'safeTransferFrom(address, address, uint256)',
+            'transferFrom',
             [
               voteModule.address,
               wallet,
-              tokenid,
+              tokenid
             ],
           ),
-          toAddress: contract,
+          toAddress: contractInput,
         },
       ],
       );
@@ -549,9 +549,9 @@ const disabled = !address ? { 'aria-disabled': true } : {};
           hasClaimedNFT ? (
             <div className="stack">
               <h2 sx={{textAlign:"center"}}>Trusted Landlords - DAO</h2>
-              <h3 style={{padding:"24px", margin:"12px"}} sx={{textAlign:"center"}}>
+              <h3 sx={{padding:"24px", margin:"12px", textAlign:"center"}}>
                     <em>
-                      <a sx={{textDecoration:"none", fontWeight:"900"}} href={"https://snowtrace.io/address/"+VOTE_MODULE_ADDRESS} target="_blank">{VOTE_MODULE_ADDRESS}
+                      <a sx={{borderRadius:"25px", padding:"8px", margin:"4px", textDecoration:"none", fontWeight:"900", backgroundColor:"#7293c1", color:"#ffbd2e"}} href={"https://snowtrace.io/address/"+VOTE_MODULE_ADDRESS} target="_blank">{VOTE_MODULE_ADDRESS}
                       </a>
                     </em>
                   </h3>
@@ -561,14 +561,10 @@ const disabled = !address ? { 'aria-disabled': true } : {};
                 </Box>
                 <Box sx={{textAlign:"center"}}>
                   <p>
-                  The Union of Federated Corp. is governed by the investors in the Trusted Landlords DAO.
-                  They manage and promote the community of Pulsar Star Corporations United. 
-                  </p>
-                  <p>
-                  To join the UFC contact us on the community Discord.
+                  To join the PSCU contact us on the community Discord.
                   This organisation manage the emission of UFC Coin (UFCC):
                   <em>
-                    <a sx={{textDecoration:"none", fontWeight:"700"}} href={"https://snowtrace.io/address/"+TOKEN_MODULE_ADDRESS} target="_blank"> {TOKEN_MODULE_ADDRESS}</a>
+                    <a sx={{textDecoration:"none", fontWeight:"700", color:"#ffbd2e"}} href={"https://snowtrace.io/address/"+TOKEN_MODULE_ADDRESS} target="_blank"> {TOKEN_MODULE_ADDRESS}</a>
                   </em>
                 </p>
                 <div>

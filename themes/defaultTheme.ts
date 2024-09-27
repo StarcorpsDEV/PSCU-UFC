@@ -10,6 +10,6 @@ export const defaultTheme: Theme = {
     text: '#fff',
     background: 'rgba(0, 0, 0, 0.95)',
     primary: '#33e',
-    accent: '#5d108a',
+    accent: '#7293c1',
   },
 };
