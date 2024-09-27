@@ -19,10 +19,11 @@ const web3Styles = {
 
 export const Header: React.FC = () => (
   <h1
-    style={{
+    sx={{
       fontFamily: 'heading',
       background: 'var(--brand-gradient)',
       backgroundClip: 'text',
+      textFillColor: 'transparent',
     }}
     aria-label="UFC DAO"
   >

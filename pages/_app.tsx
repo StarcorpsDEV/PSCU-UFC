@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           connectors={connectors}
           supportedChainIds={supportedChainIds}
         >
-          <div style={{ display: 'grid', placeItems: 'center' }}>
+          <div sx={{ display: 'grid', placeItems: 'center' }}>
             <Component {...pageProps} />{' '}
           </div>
         </ThirdwebWeb3Provider>

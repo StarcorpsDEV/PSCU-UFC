@@ -46,14 +46,14 @@ export const DaoProposals: React.FC<{
           <details
             className="card"
             key={proposal.proposalId}
-            style={{ width: '100%' }}
+            sx={{ width: '100%' }}
           >
-            <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+            <summary sx={{ fontWeight: 700, userSelect: 'none' }}>
               {proposal.description}
             </summary>
             {
               <fieldset
-                style={{
+                sx={{
                   display: 'flex',
                   gap: '0.5rem',
                   border: 'none',
@@ -65,7 +65,7 @@ export const DaoProposals: React.FC<{
                   <label
                     htmlFor={proposal.proposalId + '-' + vote.type}
                     key={vote.type}
-                    style={{ width: '100%' }}
+                    sx={{ width: '100%' }}
                   >
                     <input
                       type="radio"
@@ -82,11 +82,11 @@ export const DaoProposals: React.FC<{
           </details>
         ))}
         <>
-          <Button {...disabled} type="submit" style={{ width: '100%' }}>
+          <Button {...disabled} type="submit" sx={{ width: '100%' }}>
             {getSubmitButtonText(votingState)}
           </Button>
           {votingState !== 'voted' ? (
-            <span style={{ width: '100%' }}>
+            <span sx={{ width: '100%' }}>
               To vote you must have UFC Coin, first make your choice on the
               proposal form, delegate your tokens and then submit your answer.
             </span>

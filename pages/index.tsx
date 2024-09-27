@@ -578,11 +578,12 @@ const Home: NextPage = () => {
               >
                 <em>
                   <a
-                    style={{
+                    sx={{
                       borderRadius: '25px',
                       padding: '8px',
                       margin: '4px',
                       textDecoration: 'none',
+                      fontWeight: '900',
                       backgroundColor: '#7293c1',
                       color: '#ffbd2e',
                     }}
@@ -604,8 +605,9 @@ const Home: NextPage = () => {
                     organisation manage the emission of UFC Coin (UFCC):
                     <em>
                       <a
-                        style={{
+                        sx={{
                           textDecoration: 'none',
+                          fontWeight: '700',
                           color: '#ffbd2e',
                         }}
                         href={

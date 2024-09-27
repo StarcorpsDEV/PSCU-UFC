@@ -3,14 +3,18 @@ export const Footer: React.FC = () => {
     <footer>
       <nav>
         <ul
-          style={{
+          sx={{
             listStyle: 'none',
             display: 'grid',
+            gridTemplateColumns: ['repeat(2, 1fr)', 'repeat(4, 1fr)'],
             placeItems: 'center',
             margin: 0,
             marginTop: '1rem',
             padding: 0,
             gridGap: '1rem',
+            '& a': {
+              color: '#00d9ff',
+            },
           }}
         >
           <li>
