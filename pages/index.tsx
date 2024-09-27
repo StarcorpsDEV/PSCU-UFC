@@ -18,7 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DaoProposals } from '@components/DaoProposals';
 import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
-import { Radio, Image, Grid, Box } from 'theme-ui';
+import { Embed, Image, Grid, Box } from 'theme-ui';
 
 if (
   !process.env.REACT_APP_PRIVATE_KEY ||
@@ -96,7 +96,7 @@ const Home: NextPage = () => {
         throw new Error('Unknown delegate state');
     }
   }
-  
+
   async function verifyNFT() {
     bundleDropModule
       .balanceOf(bundleDropModule.address, '0')
@@ -278,7 +278,7 @@ const Home: NextPage = () => {
   const embedMintNFt = async () => {
     setIsClaiming(true);
     return $('#embedMintNFt').html(
-      '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=purple" width="600px" height="600px" style="max-width:100%;" frameborder="0"></iframe>',
+      '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=orange" width="100%" height="600px" style="max-width:100%;" frameborder="0"></iframe>',
     );
   };
 
@@ -373,10 +373,11 @@ const Home: NextPage = () => {
     } finally {
       // in *either* case we need to set the isVoting state to false to enable the button again
       setIsVoting(false);
-      setTimeout(()=>{toast.dismiss(toastId)},3000);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
     }
   }
-
 
   async function delegate() {
     if (!address || isVoting || hasVoted) {
@@ -396,18 +397,23 @@ const Home: NextPage = () => {
       if (delegation === ethers.constants.AddressZero) {
         await tokenModule.delegateTo(address);
       }
- 
     } catch (err) {
       console.error('failed to delegate tokens');
       toast.error('Failed to delegate tokens');
     } finally {
       // in *either* case we need to set the isVoting state to false to enable the button again
       setIsVoting(false);
-      setTimeout(()=>{toast.dismiss(toastId)},3000);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
     }
   }
 
-  const delegateState = hasVoted ? 'delegated' : isVoting ? 'delegating' : 'delegate';
+  const delegateState = hasVoted
+    ? 'delegated'
+    : isVoting
+    ? 'delegating'
+    : 'delegate';
   const votingState = hasVoted ? 'voted' : isVoting ? 'voting' : 'vote';
   const displayContents =
     hasMetaMask && address && error?.name !== 'UnsupportedChainIdError';
@@ -435,7 +441,7 @@ const Home: NextPage = () => {
         wallet = $('#newMemberAddress').val();
         amount = $('#newMemberAmount').val();
       } else {
-        toast.error('Wrong input parameters')
+        toast.error('Wrong input parameters');
         return;
       }
       await voteModule.propose(
@@ -457,7 +463,9 @@ const Home: NextPage = () => {
       console.error('failed to create first proposal', error);
     } finally {
       setIsClaiming(false);
-      setTimeout(()=>{toast.dismiss(toastId)},3000);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
     }
   };
 
@@ -487,7 +495,7 @@ const Home: NextPage = () => {
         amount = $('#senderc20Amount').val();
         contractInput = $('#senderc20Contract').val();
       } else {
-        toast.error('Wrong input parameters')
+        toast.error('Wrong input parameters');
         return;
       }
       await voteModule.propose(
@@ -520,7 +528,9 @@ const Home: NextPage = () => {
       console.error('failed to create proposal', error);
     } finally {
       setIsClaiming(false);
-      setTimeout(()=>{toast.dismiss(toastId)},3000);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
     }
   };
 
@@ -550,7 +560,7 @@ const Home: NextPage = () => {
         tokenid = $('#senderc721TokenId').val();
         contractInput = $('#senderc721Contract').val();
       } else {
-        toast.error('Wrong input parameters')
+        toast.error('Wrong input parameters');
         return;
       }
       await voteModule.propose(
@@ -582,7 +592,9 @@ const Home: NextPage = () => {
       console.error('failed to create proposal', error);
     } finally {
       setIsClaiming(false);
-      setTimeout(()=>{toast.dismiss(toastId)},3000);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
     }
   };
   const disabled = !address ? { 'aria-disabled': true } : {};
@@ -647,7 +659,8 @@ const Home: NextPage = () => {
                 </Box>
                 <Box style={{ textAlign: 'center' }}>
                   <p>
-                    This organisation manage the DAO treasury and the emission of UFC Coin (UFCC) on Avalanche:
+                    This organisation manage the DAO treasury and the emission
+                    of UFC Coin (UFCC) on Avalanche:
                     <em>
                       <a
                         sx={{
@@ -906,12 +919,17 @@ const Home: NextPage = () => {
                     }
                   </details>
                 </form>
-                <div sx={{marginTop:'16px' }}>
-                  <span sx={{ width: '100%'}}>
-                  <Button {...disabled} onClick={() => !isClaiming && delegate()} sx={{ width: '100%' }}>
-                  {getSubmitButtonText(delegateState)}
-                  </Button>
-                      To make proposals you need to have at least 1000 UFCC delegated. Click "Delegate" button to delegate (to do once).
+                <div sx={{ marginTop: '16px' }}>
+                  <span sx={{ width: '100%' }}>
+                    <Button
+                      {...disabled}
+                      onClick={() => !isClaiming && delegate()}
+                      sx={{ width: '100%' }}
+                    >
+                      {getSubmitButtonText(delegateState)}
+                    </Button>
+                    To make proposals you need to have at least 1000 UFCC. Click
+                    "Delegate" button to delegate (to do once).
                   </span>
                 </div>
               </div>
@@ -923,17 +941,203 @@ const Home: NextPage = () => {
               />
             </div>
           ) : (
-            <Button
-              onClick={() => {
-                !isClaiming && embedMintNFt();
-                verifyNFT();
-              }}
-            >
-              {isClaiming ? 'Minting...' : `Mint a Concession NFT`}
-            </Button>
+            <div>
+              <div className="card" sx={{ textAlign: 'center' }}>
+                <Box>
+                  <p>
+                    Welcome in the <em>Pulsar Star Corporation United</em>. To
+                    join this{' '}
+                    <a
+                      href="https://pulsar.game"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Pulsar
+                    </a>{' '}
+                    community reach us on{' '}
+                    <a
+                      href="https://discord.gg/dq2PaMmDbm"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Discord
+                    </a>
+                    .
+                  </p>
+                </Box>
+                <div>
+                  <video
+                    controls
+                    sx={{
+                      width: '100%',
+                      maxWidth: '1208px',
+                      height: '100%',
+                      marginTop: '32px',
+                    }}
+                  >
+                    {' '}
+                    <source src="dungeonrun.mp4"></source>
+                    {'Pulsar Star Corporation United community ERC-721 NFT'}
+                  </video>
+                </div>
+                <p>
+                  Unlocking dungeon lvl 200 during the Pulsar betatest, in may
+                  2024, with the best players of Pulsar. EagleRising,
+                  CryptoCoop, Rrose and StarCorps !
+                </p>
+              </div>
+              <div className="card" sx={{ marginTop: '32px' }}>
+                <Grid gap={2} columns={[2, '1fr 5fr']}>
+                  <Box>
+                    <img src="assets/logo.png" sx={{ height: '200px' }}></img>
+                  </Box>
+                  <Box>
+                    <p>
+                      To become a premium member of the community you need to
+                      mint this NFT token. Then you will have access to our
+                      ecosystem and you will be able to invest in our lands. In
+                      addition of your corporation claim token NFT, you will
+                      receive 60 MATIC as airdrop of game NFT of your choice and
+                      you will be able to buy Corporations Claim Concession NFT
+                      in our network on Polygon and Avalanche , the UFC Hat
+                      software license NFT and moderation right over the discord
+                      server. In addition with this NFT you will get 83 unique
+                      items of game avatars.
+                    </p>
+                    <div sx={{ textAlign: 'center' }}>
+                      <Button
+                        sx={{ height: '100px', marginTop: '50px' }}
+                        onClick={() => {
+                          window.open(
+                            'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
+                            '_blank',
+                          );
+                        }}
+                      >
+                        {'Pulsar Star Corporation United community ERC-721 NFT'}
+                      </Button>
+                    </div>
+                  </Box>
+                </Grid>
+              </div>
+              <div className="card" sx={{ marginTop: '24px' }}>
+                <Grid gap={2} columns={[2, '1fr 5fr']}>
+                  <Box>
+                    <img
+                      src="assets/avax385.png"
+                      sx={{ height: '200px' }}
+                    ></img>
+                  </Box>
+                  <Box>
+                    <p>
+                      To join on AVAX-385, the Genesis Blood Bassin 4x4 LS land
+                      mint this Edition NFT. This Truested Landlords Concession
+                      have $PLSR 5000 as assets and give the right to mine
+                      Pulsar, Mineral, Gaz and Organic on the land. The DAO
+                      treasury is managerd by the holders of UFC Coin tokens.
+                      The DAO have a quorum of 60% and each proposal is active
+                      for 48 hours.
+                    </p>
+                    <div sx={{ textAlign: 'center' }}>
+                      <Button
+                        sx={{ height: '100px', marginTop: '50px' }}
+                        onClick={() => {
+                          embedMintNFt();
+                          verifyNFT();
+                        }}
+                      >
+                        {`Trusted Landlords Concession ERC-1155 NFT`}
+                      </Button>
+                    </div>
+                  </Box>
+                </Grid>
+              </div>
+            </div>
           )
-        ) : null}
-        <div id="embedMintNFt"></div>
+        ) : (
+          ////Not connected User
+          <div>
+            <div className="card" sx={{ textAlign: 'center' }}>
+              <Box>
+                <p>
+                  Welcome in the <em>Pulsar Star Corporation United</em>. To
+                  join this{' '}
+                  <a
+                    href="https://pulsar.game"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Pulsar
+                  </a>{' '}
+                  community reach us on{' '}
+                  <a
+                    href="https://discord.gg/dq2PaMmDbm"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Discord
+                  </a>
+                  .
+                </p>
+              </Box>
+              <div>
+                <video
+                  controls
+                  sx={{
+                    width: '100%',
+                    maxWidth: '1208px',
+                    height: '100%',
+                    marginTop: '32px',
+                  }}
+                >
+                  {' '}
+                  <source src="dungeonrun.mp4"></source>
+                  {'Pulsar Star Corporation United community ERC-721 NFT'}
+                </video>
+              </div>
+              <p>
+                Unlocking dungeon lvl 200 during the Pulsar betatest, in may
+                2024, with the best players of Pulsar. EagleRising, CryptoCoop,
+                Rrose and StarCorps !
+              </p>
+            </div>
+
+            <div className="card" sx={{ marginTop: '32px' }}>
+              <Grid gap={2} columns={[2, '1fr 5fr']}>
+                <Box>
+                  <img src="assets/logo.png" sx={{ height: '200px' }}></img>
+                </Box>
+                <Box>
+                  <p>
+                    To become a premium member of the community you need to mint
+                    this NFT token. Then you will have access to our ecosystem
+                    and you will be able to invest in our lands. In addition of
+                    your corporation claim token NFT, you will receive 60 MATIC
+                    as airdrop of game NFT of your choice and you will be able
+                    to buy Corporations Claim Concession NFT in our network on
+                    Polygon and Avalanche , the UFC Hat software license NFT and
+                    moderation right over the discord server. In addition with
+                    this NFT you will get 83 unique items of game avatars.
+                  </p>
+                  <div sx={{ textAlign: 'center' }}>
+                    <Button
+                      sx={{ height: '100px', marginTop: '50px' }}
+                      onClick={() => {
+                        window.open(
+                          'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
+                          '_blank',
+                        );
+                      }}
+                    >
+                      {'Pulsar Star Corporation United community ERC-721 NFT'}
+                    </Button>
+                  </div>
+                </Box>
+              </Grid>
+            </div>
+          </div>
+        )}
+        <div sx={{ marginTop: '32px' }} id="embedMintNFt"></div>
       </main>
       <Footer />
     </>
