@@ -5,9 +5,9 @@ export const DaoMembers: React.FC<{ members: Member[] }> = ({ members }) => {
   return (
     <div className="stack">
       <h2>Members List</h2>
-      <table className="card"  sx={{width:"100%"}}>
+      <table className="card" style={{ width: '100%' }}>
         <thead>
-          <tr sx={{ '& th': { textAlign: 'left', width:'100vh' } }}>
+          <tr style={{ textAlign: 'left', width: '100vh' }}>
             <th>Address</th>
             <th>Token Amount</th>
           </tr>

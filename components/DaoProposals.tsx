@@ -43,13 +43,17 @@ export const DaoProposals: React.FC<{
         }}
       >
         {proposals.map((proposal) => (
-          <details className="card" key={proposal.proposalId} sx={{width:"100%"}}>
-            <summary sx={{ fontWeight: 700, userSelect: 'none' }}>
+          <details
+            className="card"
+            key={proposal.proposalId}
+            style={{ width: '100%' }}
+          >
+            <summary style={{ fontWeight: 700, userSelect: 'none' }}>
               {proposal.description}
             </summary>
             {
               <fieldset
-                sx={{
+                style={{
                   display: 'flex',
                   gap: '0.5rem',
                   border: 'none',
@@ -61,8 +65,7 @@ export const DaoProposals: React.FC<{
                   <label
                     htmlFor={proposal.proposalId + '-' + vote.type}
                     key={vote.type}
-                    sx={{width:"100%"}}
-
+                    style={{ width: '100%' }}
                   >
                     <input
                       type="radio"
@@ -71,7 +74,7 @@ export const DaoProposals: React.FC<{
                       value={vote.type}
                       defaultChecked={vote.type === 2}
                     />
-                    {" " + vote.label}
+                    {' ' + vote.label}
                   </label>
                 ))}
               </fieldset>
@@ -79,12 +82,13 @@ export const DaoProposals: React.FC<{
           </details>
         ))}
         <>
-          <Button {...disabled} type="submit" sx={{width:"100%"}}>
+          <Button {...disabled} type="submit" style={{ width: '100%' }}>
             {getSubmitButtonText(votingState)}
           </Button>
           {votingState !== 'voted' ? (
-            <span sx={{ width:"100%" }}>
-             To vote you must have UFC Coin, first make your choice on the proposal form, delegate your tokens and then submit your answer.
+            <span style={{ width: '100%' }}>
+              To vote you must have UFC Coin, first make your choice on the
+              proposal form, delegate your tokens and then submit your answer.
             </span>
           ) : null}
         </>

@@ -19,7 +19,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>PSCU - Union of Federated Corporations</title>
-        <meta name="description" content="PSCU - Union of Federated Corporations" />
+        <meta
+          name="description"
+          content="PSCU - Union of Federated Corporations"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider theme={defaultTheme}>
@@ -27,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           connectors={connectors}
           supportedChainIds={supportedChainIds}
         >
-          <div sx={{ display: 'grid', placeItems: 'center' }}>
+          <div style={{ display: 'grid', placeItems: 'center' }}>
             <Component {...pageProps} />{' '}
           </div>
         </ThirdwebWeb3Provider>
