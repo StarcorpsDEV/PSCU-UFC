@@ -583,7 +583,6 @@ const Home: NextPage = () => {
                       padding: '8px',
                       margin: '4px',
                       textDecoration: 'none',
-                      fontWeight: '900',
                       backgroundColor: '#7293c1',
                       color: '#ffbd2e',
                     }}
@@ -607,7 +606,6 @@ const Home: NextPage = () => {
                       <a
                         style={{
                           textDecoration: 'none',
-                          fontWeight: '700',
                           color: '#ffbd2e',
                         }}
                         href={
