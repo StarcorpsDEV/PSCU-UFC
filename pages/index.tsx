@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import $ from 'jquery'
+import $ from 'jquery';
 import { Header } from '@components/Header';
 import { Wallet } from '@components/Wallet';
 import { useWeb3WithEns } from 'utilities/hooks';
@@ -20,16 +20,25 @@ import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
 import { Radio, Image, Grid, Box } from 'theme-ui';
 
-if (!process.env.REACT_APP_PRIVATE_KEY || process.env.REACT_APP_PRIVATE_KEY == '') {
+if (
+  !process.env.REACT_APP_PRIVATE_KEY ||
+  process.env.REACT_APP_PRIVATE_KEY == ''
+) {
   console.log('🛑 Private key not found.');
-  process.env.REACT_APP_PRIVATE_KEY=""
+  process.env.REACT_APP_PRIVATE_KEY = '';
 }
 
-if (!process.env.REACT_APP_PRIVATE_KEY || process.env.REACT_APP_PRIVATE_KEY == '') {
+if (
+  !process.env.REACT_APP_PRIVATE_KEY ||
+  process.env.REACT_APP_PRIVATE_KEY == ''
+) {
   console.log('🛑 Alchemy API URL not found.');
 }
 
-if (!process.env.REACT_APP_DEFAUT_DAO_MEMBERS || process.env.REACT_APP_DEFAUT_DAO_MEMBERS == '') {
+if (
+  !process.env.REACT_APP_DEFAUT_DAO_MEMBERS ||
+  process.env.REACT_APP_DEFAUT_DAO_MEMBERS == ''
+) {
   console.log('🛑 Wallet Address not found.');
 }
 
@@ -37,7 +46,7 @@ const sdk = new ThirdwebSDK(
   new ethers.Wallet(
     process.env.REACT_APP_PRIVATE_KEY,
     ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_API_URL),
-  )
+  ),
 );
 
 // Grab a reference to our ERC-1155 contract.
@@ -73,29 +82,27 @@ const Home: NextPage = () => {
   // Without it we can only read data, not write.
   const signer = provider?.getSigner();
 
-  
+  async function verifyNFT() {
+    bundleDropModule
+      .balanceOf(bundleDropModule.address, '0')
+      .then((balance) => {
+        // If balance is greater than 0, they have our NFT!
+        if (balance.gt(0)) {
+          setHasClaimedNFT(true);
+          console.log('🌟 this user has a membership NFT!');
+        } else {
+          console.log("😭 this user doesn't have a membership NFT.");
+        }
+      })
+      .catch((error) => {
+        console.error('failed to nft balance', error);
+        toast.error('Failed to get NFT balance');
+      });
 
-  async function verifyNFT () {
-        bundleDropModule
-    .balanceOf(bundleDropModule.address, '0')
-    .then((balance) => {
-      // If balance is greater than 0, they have our NFT!
-      if (balance.gt(0)) {
-        setHasClaimedNFT(true);
-        console.log('🌟 this user has a membership NFT!');
-      } else {
-        console.log("😭 this user doesn't have a membership NFT.");
-      }
-    })
-    .catch((error) => {
-      console.error('failed to nft balance', error);
-      toast.error('Failed to get NFT balance');
-    });
-    
-    if(!hasClaimedNFT){
-      setTimeout( () => {
-        verifyNFT()
-      }, 10000)
+    if (!hasClaimedNFT) {
+      setTimeout(() => {
+        verifyNFT();
+      }, 10000);
     }
   }
 
@@ -129,11 +136,15 @@ const Home: NextPage = () => {
       .getAllClaimerAddresses('0')
       .then((addr) => {
         console.log('🚀 Members addresses', addr);
-        if(addr.length === 0){
-          const members : string[] = JSON.parse(typeof(process.env.REACT_APP_DEFAUT_DAO_MEMBERS) === "string" ? process.env.REACT_APP_DEFAUT_DAO_MEMBERS : "");
+        if (addr.length === 0) {
+          const members: string[] = JSON.parse(
+            typeof process.env.REACT_APP_DEFAUT_DAO_MEMBERS === 'string'
+              ? process.env.REACT_APP_DEFAUT_DAO_MEMBERS
+              : '',
+          );
           setMemberAddresses(members);
-        }else{
-          const members = addr
+        } else {
+          const members = addr;
           setMemberAddresses(members);
         }
       })
@@ -249,13 +260,12 @@ const Home: NextPage = () => {
       });
   }, [hasClaimedNFT, proposals, address]);
 
-
-const embedMintNFt = async () => {
-  setIsClaiming(true);
-  return $("#embedMintNFt").html('<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=purple" width="600px" height="600px" style="max-width:100%;" frameborder="0"></iframe>'
-)
-}
-
+  const embedMintNFt = async () => {
+    setIsClaiming(true);
+    return $('#embedMintNFt').html(
+      '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=purple" width="600px" height="600px" style="max-width:100%;" frameborder="0"></iframe>',
+    );
+  };
 
   async function vote() {
     if (!address || isVoting || hasVoted) {
@@ -356,10 +366,6 @@ const embedMintNFt = async () => {
   const displayContents =
     hasMetaMask && address && error?.name !== 'UnsupportedChainIdError';
 
-
-
-
-
   //make PROPOSAL Button function
   const proposalAddNewMember = async () => {
     if (!address) {
@@ -370,45 +376,44 @@ const embedMintNFt = async () => {
     toast.info('🔨 Proposing...', { toastId, autoClose: false });
 
     try {
-      var desc : any;
-      var wallet : any;
-      var amount : any;
+      var desc: any;
+      var wallet: any;
+      var amount: any;
       // Create proposal to mint 420,000 new token to the treasury.
-      if($("#newMemberAddress").val() && $("#newMemberDescription").val() && $("#newMemberAmount").val()){
-       desc = $("#newMemberDescription").val()
-       wallet = $("#newMemberAddress").val()
-       amount = $("#newMemberAmount").val()
-      }else{
-        console.log("error")
-        return
+      if (
+        $('#newMemberAddress').val() &&
+        $('#newMemberDescription').val() &&
+        $('#newMemberAmount').val()
+      ) {
+        desc = $('#newMemberDescription').val();
+        wallet = $('#newMemberAddress').val();
+        amount = $('#newMemberAmount').val();
+      } else {
+        console.log('error');
+        return;
       }
       await voteModule.propose(
-        desc + "Proposal parameters, wallet: " +wallet + " amount: "+ amount,
-      [
-      {
-      nativeTokenValue: 0,
-      transactionData: tokenModule.contract.interface.encodeFunctionData(
-        'mint',
+        desc + 'Proposal parameters, wallet: ' + wallet + ' amount: ' + amount,
         [
-          wallet,
-          ethers.utils.parseUnits(amount.toString(), 18),
+          {
+            nativeTokenValue: 0,
+            transactionData: tokenModule.contract.interface.encodeFunctionData(
+              'mint',
+              [wallet, ethers.utils.parseUnits(amount.toString(), 18)],
+            ),
+            toAddress: tokenModule.address,
+          },
         ],
-      ),
-      toAddress: tokenModule.address,
-      },
-      ],
       );
 
       console.log('✅ Successfully created proposal to mint tokens');
-      } catch (error) {
+    } catch (error) {
       console.error('failed to create first proposal', error);
-      }finally {
-        setIsClaiming(false);
-        toast.dismiss(toastId);
-      }
-}
-
-
+    } finally {
+      setIsClaiming(false);
+      toast.dismiss(toastId);
+    }
+  };
 
   //make PROPOSAL Button function
   const proposalsendERC20 = async () => {
@@ -420,51 +425,61 @@ const embedMintNFt = async () => {
     toast.info('🔨 Proposing...', { toastId, autoClose: false });
 
     try {
-      var desc : any;
-      var wallet : any;
-      var amount : any;
-      var contractInput : any;
+      var desc: any;
+      var wallet: any;
+      var amount: any;
+      var contractInput: any;
 
-      if($("#senderc20Contract").val() && $("#senderc20Address").val() && $("#senderc20Description").val() && $("#senderc20Amount").val()){
-       desc = $("#senderc20Description").val()
-       wallet = $("#senderc20Address").val()
-       amount = $("#senderc20Amount").val()
-       contractInput = $("#senderc20Contract").val()
-      }else{
-        console.log("error")
-        return
+      if (
+        $('#senderc20Contract').val() &&
+        $('#senderc20Address').val() &&
+        $('#senderc20Description').val() &&
+        $('#senderc20Amount').val()
+      ) {
+        desc = $('#senderc20Description').val();
+        wallet = $('#senderc20Address').val();
+        amount = $('#senderc20Amount').val();
+        contractInput = $('#senderc20Contract').val();
+      } else {
+        console.log('error');
+        return;
       }
       await voteModule.propose(
-        desc + "Proposal parameters, contract: " + contractInput + " wallet: " +wallet + " amount: "+ amount,
+        desc +
+          'Proposal parameters, contract: ' +
+          contractInput +
+          ' wallet: ' +
+          wallet +
+          ' amount: ' +
+          amount,
         [
-        {
-          // Again, we're sending ourselves 0 ETH. Just sending our own token.
-          nativeTokenValue: 0,
-          transactionData: sdk.getTokenModule(contractInput).contract.interface.encodeFunctionData(
-            // We're doing a transfer from the treasury to our wallet.
-            'transfer',
-            [
-              wallet,
-              ethers.utils.parseUnits(amount.toString(), 18),
-            ],
-          ),
+          {
+            // Again, we're sending ourselves 0 ETH. Just sending our own token.
+            nativeTokenValue: 0,
+            transactionData: sdk
+              .getTokenModule(contractInput)
+              .contract.interface.encodeFunctionData(
+                // We're doing a transfer from the treasury to our wallet.
+                'transfer',
+                [wallet, ethers.utils.parseUnits(amount.toString(), 18)],
+              ),
 
-          toAddress: contractInput,
-        },
-      ],
+            toAddress: contractInput,
+          },
+        ],
       );
 
       console.log('✅ Successfully created proposal to send tokens');
-      } catch (error) {
+    } catch (error) {
       console.error('failed to create proposal', error);
-      }finally {
-        setIsClaiming(false);
-        toast.dismiss(toastId);
-      }
-}
+    } finally {
+      setIsClaiming(false);
+      toast.dismiss(toastId);
+    }
+  };
 
   //make PROPOSAL Button function
-  const proposalsendERC721  = async () => {
+  const proposalsendERC721 = async () => {
     if (!address) {
       return;
     }
@@ -473,54 +488,63 @@ const embedMintNFt = async () => {
     toast.info('🔨 Proposing...', { toastId, autoClose: false });
 
     try {
-      var desc : any;
-      var wallet : any;
-      var tokenid : any;
-      var contractInput : any;
+      var desc: any;
+      var wallet: any;
+      var tokenid: any;
+      var contractInput: any;
 
-      if($("#senderc721Contract").val() && $("#senderc721Address").val() && $("#senderc721Description").val() && $("#senderc721TokenId").val()){
-       desc = $("#senderc721Description").val()
-       wallet = $("#senderc721Address").val()
-       tokenid = $("#senderc721TokenId").val()
-       contractInput = $("#senderc721Contract").val()
-      }else{
-        console.log("error")
-        return
+      if (
+        $('#senderc721Contract').val() &&
+        $('#senderc721Address').val() &&
+        $('#senderc721Description').val() &&
+        $('#senderc721TokenId').val()
+      ) {
+        desc = $('#senderc721Description').val();
+        wallet = $('#senderc721Address').val();
+        tokenid = $('#senderc721TokenId').val();
+        contractInput = $('#senderc721Contract').val();
+      } else {
+        console.log('error');
+        return;
       }
       await voteModule.propose(
-      desc + "Proposal parameters, contract: " + contractInput + " wallet: " +wallet + " tokenid: "+ tokenid,
-      [
-        {
-          // Again, we're sending ourselves 0 ETH. Just sending our own token.
-          nativeTokenValue: 0,
-          transactionData: sdk.getDropModule(contractInput).contract.interface.encodeFunctionData(
-            // We're doing a transfer from the treasury to our wallet.
-            'transferFrom',
-            [
-              voteModule.address,
-              wallet,
-              tokenid
-            ],
-          ),
-          toAddress: contractInput,
-        },
-      ],
+        desc +
+          'Proposal parameters, contract: ' +
+          contractInput +
+          ' wallet: ' +
+          wallet +
+          ' tokenid: ' +
+          tokenid,
+        [
+          {
+            // Again, we're sending ourselves 0 ETH. Just sending our own token.
+            nativeTokenValue: 0,
+            transactionData: sdk
+              .getDropModule(contractInput)
+              .contract.interface.encodeFunctionData(
+                // We're doing a transfer from the treasury to our wallet.
+                'transferFrom',
+                [voteModule.address, wallet, tokenid],
+              ),
+            toAddress: contractInput,
+          },
+        ],
       );
 
       console.log('✅ Successfully created proposal to send tokens');
-      } catch (error) {
+    } catch (error) {
       console.error('failed to create proposal', error);
-      }finally {
-        setIsClaiming(false);
-        toast.dismiss(toastId);
-      }
-}
-const disabled = !address ? { 'aria-disabled': true } : {};
+    } finally {
+      setIsClaiming(false);
+      toast.dismiss(toastId);
+    }
+  };
+  const disabled = !address ? { 'aria-disabled': true } : {};
 
   return (
     <>
       <header
-        sx={{
+        style={{
           margin: '1rem',
           display: 'grid',
           gap: '0.25rem',
@@ -528,7 +552,7 @@ const disabled = !address ? { 'aria-disabled': true } : {};
           placeItems: 'center',
         }}
       >
-        <div sx={{ gridArea: 'wallet' }}>
+        <div style={{ gridArea: 'wallet' }}>
           {hasMetaMask ? (
             <Wallet
               connectWallet={() => connectWallet('injected')}
@@ -538,233 +562,329 @@ const disabled = !address ? { 'aria-disabled': true } : {};
             />
           ) : null}
         </div>
-        <div sx={{ gridArea: 'header' }}>
+        <div style={{ gridArea: 'header' }}>
           <Header />
         </div>
       </header>
 
-      <main sx={{ margin: '24px' }}>
+      <main style={{ margin: '24px' }}>
         <ToastContainer />
         {displayContents ? (
           hasClaimedNFT ? (
             <div className="stack">
-              <h2 sx={{textAlign:"center"}}>Trusted Landlords - DAO</h2>
-              <h3 sx={{padding:"24px", margin:"12px", textAlign:"center"}}>
-                    <em>
-                      <a sx={{borderRadius:"25px", padding:"8px", margin:"4px", textDecoration:"none", fontWeight:"900", backgroundColor:"#7293c1", color:"#ffbd2e"}} href={"https://snowtrace.io/address/"+VOTE_MODULE_ADDRESS} target="_blank">{VOTE_MODULE_ADDRESS}
-                      </a>
-                    </em>
-                  </h3>
-              <Grid columns={[3,"1fr 2fr 1fr"]}>
+              <h2 style={{ textAlign: 'center' }}>Trusted Landlords - DAO</h2>
+              <h3
+                style={{ padding: '24px', margin: '12px', textAlign: 'center' }}
+              >
+                <em>
+                  <a
+                    style={{
+                      borderRadius: '25px',
+                      padding: '8px',
+                      margin: '4px',
+                      textDecoration: 'none',
+                      fontWeight: '900',
+                      backgroundColor: '#7293c1',
+                      color: '#ffbd2e',
+                    }}
+                    href={'https://snowtrace.io/address/' + VOTE_MODULE_ADDRESS}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {VOTE_MODULE_ADDRESS}
+                  </a>
+                </em>
+              </h3>
+              <Grid columns={[3, '1fr 2fr 1fr']}>
                 <Box>
                   <Image alt="UFC" src={UFC} />
                 </Box>
-                <Box sx={{textAlign:"center"}}>
+                <Box style={{ textAlign: 'center' }}>
                   <p>
-                  To join the PSCU contact us on the community Discord.
-                  This organisation manage the emission of UFC Coin (UFCC):
-                  <em>
-                    <a sx={{textDecoration:"none", fontWeight:"700", color:"#ffbd2e"}} href={"https://snowtrace.io/address/"+TOKEN_MODULE_ADDRESS} target="_blank"> {TOKEN_MODULE_ADDRESS}</a>
-                  </em>
-                </p>
-                <div>
-                  <Image alt="DEFAULT_AVATAR" sx={{width:"50%", marginLeft:"25%"}} src={DEFAULT_AVATAR}/>
-                </div>
+                    To join the PSCU contact us on the community Discord. This
+                    organisation manage the emission of UFC Coin (UFCC):
+                    <em>
+                      <a
+                        style={{
+                          textDecoration: 'none',
+                          fontWeight: '700',
+                          color: '#ffbd2e',
+                        }}
+                        href={
+                          'https://snowtrace.io/address/' + TOKEN_MODULE_ADDRESS
+                        }
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {' '}
+                        {TOKEN_MODULE_ADDRESS}
+                      </a>
+                    </em>
+                  </p>
+                  <div>
+                    <Image
+                      alt="DEFAULT_AVATAR"
+                      style={{ width: '50%', marginLeft: '25%' }}
+                      src={DEFAULT_AVATAR}
+                    />
+                  </div>
                 </Box>
                 <Box>
-                  <Image alt="TLC" src={TLL}/>
+                  <Image alt="TLC" src={TLL} />
                 </Box>
               </Grid>
-              
-              <DaoMembers members={memberList}/>
 
-          <div className="stack" aria-live="polite">
-          <h2>New Proposals</h2>
-          <form
-            className="stack"
-            onSubmit={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-          >
-          <details className="card" sx={{width:"100%"}}>
-                <summary sx={{ fontWeight: 700, userSelect: 'none' }}>
-                  {"Add New member in the DAO"}
-                </summary>
-                {
-                  <fieldset
-                    sx={{
-                      display: 'flex',
-                      gap: '0.5rem',
-                      border: 'none',
-                    }}
-                    {...disabled}
-                  >
+              <DaoMembers members={memberList} />
 
-                    <legend>{ "Proposal to mint new token to a wallet address" }</legend>
-                      <label
-                        sx={{width:"100%"}}
-                        htmlFor={"proposalTypes"}
+              <div className="stack" aria-live="polite">
+                <h2>New Proposals</h2>
+                <form
+                  className="stack"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }}
+                >
+                  <details className="card" style={{ width: '100%' }}>
+                    <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+                      {'Add New member in the DAO'}
+                    </summary>
+                    {
+                      <fieldset
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          border: 'none',
+                        }}
+                        {...disabled}
                       >
-                        <textarea
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        id={"newMemberDescription"}
-                            placeholder={"Proposal Description"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="text"
-                        id={"newMemberAddress"}
-                        placeholder={"New member address"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="number"
-                        id={"newMemberAmount"}
-                        placeholder={"ERC-20 token amount"}
-                        />
-                      <Button onClick={ () => !isClaiming && proposalAddNewMember() } 
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
+                        <legend>
+                          {'Proposal to mint new token to a wallet address'}
+                        </legend>
+                        <label
+                          style={{ width: '100%' }}
+                          htmlFor={'proposalTypes'}
                         >
-                      {isClaiming ? 'Proposing...' : `Make the Proposal`}
-                      </Button>
-                      </label>
-                  </fieldset>
-                }            
-              </details>
+                          <textarea
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            id={'newMemberDescription'}
+                            placeholder={'Proposal Description'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="text"
+                            id={'newMemberAddress'}
+                            placeholder={'New member address'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="number"
+                            id={'newMemberAmount'}
+                            placeholder={'ERC-20 token amount'}
+                          />
+                          <Button
+                            onClick={() =>
+                              !isClaiming && proposalAddNewMember()
+                            }
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                          >
+                            {isClaiming ? 'Proposing...' : `Make the Proposal`}
+                          </Button>
+                        </label>
+                      </fieldset>
+                    }
+                  </details>
 
-              <details className="card" sx={{width:"100%"}}>
-                <summary sx={{ fontWeight: 700, userSelect: 'none' }}>
-                  {"Send ERC-20 token from DAO treasury"}
-                </summary>
-                {
-                  <fieldset
-                    sx={{
-                      display: 'flex',
-                      gap: '0.5rem',
-                      border: 'none',
-                    }}
-                    {...disabled}
-                  >
-
-                    <legend>{ "Proposal to send token from the treasury to a wallet" }</legend>
-                      <label
-                        sx={{width:"100%"}}
-                        htmlFor={"proposalTypes"}
+                  <details className="card" style={{ width: '100%' }}>
+                    <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+                      {'Send ERC-20 token from DAO treasury'}
+                    </summary>
+                    {
+                      <fieldset
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          border: 'none',
+                        }}
+                        {...disabled}
                       >
-                        <textarea
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        id={"senderc20Description"}
-                            placeholder={"Proposal Description"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="text"
-                        id={"senderc20Contract"}
-                        placeholder={"Token contract"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="text"
-                        id={"senderc20Address"}
-                        placeholder={"Receiver address"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="number"
-                        id={"senderc20Amount"}
-                        placeholder={"ERC-20 token amount"}
-                        />
-                      <Button onClick={ () => !isClaiming && proposalsendERC20() } 
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
+                        <legend>
+                          {
+                            'Proposal to send token from the treasury to a wallet'
+                          }
+                        </legend>
+                        <label
+                          style={{ width: '100%' }}
+                          htmlFor={'proposalTypes'}
                         >
-                      {isClaiming ? 'Proposing...' : `Make the Proposal`}
-                      </Button>
-                      </label>
-                  </fieldset>
-                }            
-              </details>
+                          <textarea
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            id={'senderc20Description'}
+                            placeholder={'Proposal Description'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="text"
+                            id={'senderc20Contract'}
+                            placeholder={'Token contract'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="text"
+                            id={'senderc20Address'}
+                            placeholder={'Receiver address'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="number"
+                            id={'senderc20Amount'}
+                            placeholder={'ERC-20 token amount'}
+                          />
+                          <Button
+                            onClick={() => !isClaiming && proposalsendERC20()}
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                          >
+                            {isClaiming ? 'Proposing...' : `Make the Proposal`}
+                          </Button>
+                        </label>
+                      </fieldset>
+                    }
+                  </details>
 
-
-
-              <details className="card" sx={{width:"100%"}}>
-                <summary sx={{ fontWeight: 700, userSelect: 'none' }}>
-                  {"Send ERC-721 NFTs from DAO treasury"}
-                </summary>
-                {
-                  <fieldset
-                    sx={{
-                      display: 'flex',
-                      gap: '0.5rem',
-                      border: 'none',
-                    }}
-                    {...disabled}
-                  >
-
-                    <legend>{ "Proposal to send NFT from the treasury to a wallet" }</legend>
-                      <label
-                        sx={{width:"100%"}}
-                        htmlFor={"proposalTypes"}
+                  <details className="card" style={{ width: '100%' }}>
+                    <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+                      {'Send ERC-721 NFTs from DAO treasury'}
+                    </summary>
+                    {
+                      <fieldset
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          border: 'none',
+                        }}
+                        {...disabled}
                       >
-                        <textarea
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        id={"senderc721Description"}
-                            placeholder={"Proposal Description"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="text"
-                        id={"senderc721Contract"}
-                        placeholder={"Token contract"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="text"
-                        id={"senderc721Address"}
-                        placeholder={"Receiver address"}
-                        />
-                        <input
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
-                        type="number"
-                        id={"senderc721TokenId"}
-                        placeholder={"ERC-721 token id"}
-                        />
-                      <Button onClick={ () => !isClaiming && proposalsendERC721() } 
-                        sx={{width:"100%", margin:"6px", padding:"6px"}}
+                        <legend>
+                          {'Proposal to send NFT from the treasury to a wallet'}
+                        </legend>
+                        <label
+                          style={{ width: '100%' }}
+                          htmlFor={'proposalTypes'}
                         >
-                      {isClaiming ? 'Proposing...' : `Make the Proposal`}
-                      </Button>
-                      </label>
-                  </fieldset>
-                }            
-              </details>
-          </form>
-        </div>
+                          <textarea
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            id={'senderc721Description'}
+                            placeholder={'Proposal Description'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="text"
+                            id={'senderc721Contract'}
+                            placeholder={'Token contract'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="text"
+                            id={'senderc721Address'}
+                            placeholder={'Receiver address'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="number"
+                            id={'senderc721TokenId'}
+                            placeholder={'ERC-721 token id'}
+                          />
+                          <Button
+                            onClick={() => !isClaiming && proposalsendERC721()}
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                          >
+                            {isClaiming ? 'Proposing...' : `Make the Proposal`}
+                          </Button>
+                        </label>
+                      </fieldset>
+                    }
+                  </details>
+                </form>
+              </div>
 
-          <DaoProposals
-            proposals={proposals}
-            vote={vote}
-            votingState={votingState}
-          />
-
+              <DaoProposals
+                proposals={proposals}
+                vote={vote}
+                votingState={votingState}
+              />
             </div>
           ) : (
-            <Button onClick={() => {!isClaiming && 
-              embedMintNFt()
-              verifyNFT()
-            }}>
+            <Button
+              onClick={() => {
+                !isClaiming && embedMintNFt();
+                verifyNFT();
+              }}
+            >
               {isClaiming ? 'Minting...' : `Mint a Concession NFT`}
             </Button>
-            )
+          )
         ) : null}
-          <div id="embedMintNFt">
-          </div>
+        <div id="embedMintNFt"></div>
       </main>
       <Footer />
     </>
   );
 };
-
-
 
 export default Home;

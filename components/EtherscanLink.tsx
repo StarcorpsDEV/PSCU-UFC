@@ -7,7 +7,7 @@ export const EtherscanLink: React.FC<{
 }> = ({ address, domainName, avatar }) => {
   return (
     <a
-      sx={{
+      style={{
         backgroundColor: '#fff',
 
         color: 'accent',
@@ -17,22 +17,19 @@ export const EtherscanLink: React.FC<{
         whiteSpace: 'nowrap',
         display: 'flex',
         padding: '0.25rem',
-        '& img': {
-          borderRadius: '50%',
-          border: '1px solid #000000 !important',
-        },
+        border: '1px solid #000000 !important',
       }}
       href={`https://snowtrace.io/address/${address}`}
       title={`User with wallet address ${address} on etherscan.io`}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noreferrer"
     >
       <Image src={avatar} alt="" width="24" height="24" />
       <span
-        sx={{
+        style={{
           marginLeft: '0.5rem',
           marginRight: '0.25rem',
-          display: ['none', 'inherit'],
+          display: 'none',
         }}
       >
         {domainName ?? address}
