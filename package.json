@@ -1,5 +1,5 @@
 {
-  "name": "pscu-ufc-dao",
+  "name": "pscu-ufc-dao-avax",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,7 +19,7 @@
     "@3rdweb/hooks": "^1.6.0",
     "@3rdweb/sdk": "^1.29.3",
     "dotenv": "^10.0.0",
-    "ethers": "^6.13.2",
+    "ethers": "^5.5.2",
     "jquery": "^3.7.1",
     "next": "^12.0.7",
     "react": "^17.0.2",
