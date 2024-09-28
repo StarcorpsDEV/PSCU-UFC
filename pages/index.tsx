@@ -950,7 +950,7 @@ const Home: NextPage = () => {
                       padding: '8px',
                       margin: '4px',
                       textDecoration: 'none',
-                      fontWeight: '900',
+                      fontWeight: '700',
                       backgroundColor: '#7293c1',
                       color: '#ffbd2e',
                     }}
