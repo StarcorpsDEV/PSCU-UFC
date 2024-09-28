@@ -1050,8 +1050,8 @@ const Home: NextPage = () => {
                     <p>
                       Get shares from the mining fee from the community Genesis
                       Lands tax in $PLSR and help us to grow. Drop UFCPLSR
-                      tokens and will use the income from the sale to mint more
-                      Genesis lands NFT from the Pulsar game shop.
+                      tokens and we will use the income from the sale to mint
+                      more Genesis lands NFT from the Pulsar game shop.
                     </p>
                     <div sx={{ textAlign: 'center' }}>
                       <Button
@@ -1145,8 +1145,8 @@ const Home: NextPage = () => {
                   <p>
                     Get shares from the mining fee from the community Genesis
                     Lands tax in $PLSR and help us to grow. Drop UFCPLSR tokens
-                    and will use the income from the sale to mint more Genesis
-                    lands NFT from the Pulsar game shop.
+                    and we will use the income from the sale to mint more
+                    Genesis lands NFT from the Pulsar game shop.
                   </p>
                   <div sx={{ textAlign: 'center' }}>
                     <Button
