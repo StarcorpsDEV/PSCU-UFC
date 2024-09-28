@@ -19,7 +19,7 @@ export const DaoMembers: React.FC<{ members: Member[] }> = ({ members }) => {
             <th>
               <img
                 width="48px"
-                src="assets/ufcc.png"
+                src="assets/UFCC.png"
                 alt="ufcc"
                 sx={{ display: 'inline' }}
               ></img>
