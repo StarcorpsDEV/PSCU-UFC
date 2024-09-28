@@ -939,7 +939,9 @@ const Home: NextPage = () => {
         {displayContents ? (
           hasClaimedNFT ? (
             <div className="stack">
-              <h2 style={{ textAlign: 'center' }}>Trusted Landlords - DAO</h2>
+              <h3 style={{ textAlign: 'center' }}>
+                Trusted Landlords Corp. DAO
+              </h3>
               <h3
                 style={{ padding: '24px', margin: '12px', textAlign: 'center' }}
               >
@@ -969,7 +971,8 @@ const Home: NextPage = () => {
                 <Box style={{ textAlign: 'center' }}>
                   <p>
                     This organisation manage the DAO treasury and the emission
-                    of UFC Coin (UFCC) on Avalanche:
+                    of UFC Coin (UFCC) and the UFC Pulsar (UFCPLSR) ERC-20
+                    tokens on Avalanche:
                     <em>
                       <a
                         sx={{
@@ -984,7 +987,6 @@ const Home: NextPage = () => {
                         target="_blank"
                       >
                         {' '}
-                        {UFCCICON}
                         {TOKEN_MODULE_ADDRESS}
                       </a>
                     </em>
@@ -1079,7 +1081,7 @@ const Home: NextPage = () => {
                         {...disabled}
                       >
                         <legend>
-                          {'Proposal to mint new token to a wallet address'}
+                          {'Proposal to mint new token to a wallet address:'}
                         </legend>
                         <label
                           style={{ width: '100%' }}
@@ -1145,7 +1147,7 @@ const Home: NextPage = () => {
                         {...disabled}
                       >
                         <legend>
-                          {'Proposal to change the voting period of the DAO.'}
+                          {'Proposal to change the voting period of the DAO:'}
                         </legend>
                         <label
                           style={{ width: '100%' }}
@@ -1204,7 +1206,7 @@ const Home: NextPage = () => {
                       >
                         <legend>
                           {
-                            'Proposal to change the approval treshold to accept proposal in the DAO.'
+                            'Proposal to change the approval treshold to accept proposal in the DAO:'
                           }
                         </legend>
                         <label
@@ -1262,7 +1264,7 @@ const Home: NextPage = () => {
                       >
                         <legend>
                           {
-                            'Proposal to send token from the treasury to a wallet'
+                            'Proposal to send token from the treasury to a wallet:'
                           }
                         </legend>
                         <label
@@ -1337,7 +1339,9 @@ const Home: NextPage = () => {
                         {...disabled}
                       >
                         <legend>
-                          {'Proposal to send NFT from the treasury to a wallet'}
+                          {
+                            'Proposal to send NFT from the treasury to a wallet:'
+                          }
                         </legend>
                         <label
                           style={{ width: '100%' }}
