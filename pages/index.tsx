@@ -275,13 +275,18 @@ const Home: NextPage = () => {
       });
   }, [hasClaimedNFT, proposals, address]);
 
-  const embedMintNFt = async () => {
+  const embedEditionDropTL = async () => {
     setIsClaiming(true);
-    return $('#embedMintNFt').html(
+    return $('#embedDiv').html(
       '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=orange" width="100%" height="600px" style="max-width:100%;" frameborder="0"></iframe>',
     );
   };
-
+  const embedDropUFCPLSR = async () => {
+    setIsClaiming(true);
+    return $('#embedDiv').html(
+      '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc20.html?contract=0x7A6bF020161dEab23913ccFa5bE43aD37AEB6CA8&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&theme=dark&primaryColor=red"  width="100%"    height="600px"    style="max-width:100%;"    frameborder="0"></iframe>',
+    );
+  };
   async function vote() {
     if (!address || isVoting || hasVoted) {
       return;
@@ -989,7 +994,7 @@ const Home: NextPage = () => {
               <div className="card" sx={{ marginTop: '32px' }}>
                 <Grid gap={2} columns={[2, '1fr 5fr']}>
                   <Box>
-                    <img src="assets/logo.png" sx={{ height: '200px' }}></img>
+                    <img src="assets/logo.png" sx={{ width: '100%' }}></img>
                   </Box>
                   <Box>
                     <p>
@@ -1023,10 +1028,7 @@ const Home: NextPage = () => {
               <div className="card" sx={{ marginTop: '24px' }}>
                 <Grid gap={2} columns={[2, '1fr 5fr']}>
                   <Box>
-                    <img
-                      src="assets/avax385.png"
-                      sx={{ height: '200px' }}
-                    ></img>
+                    <img src="assets/avax385.png" sx={{ width: '100%' }}></img>
                   </Box>
                   <Box>
                     <p>
@@ -1042,11 +1044,37 @@ const Home: NextPage = () => {
                       <Button
                         sx={{ height: '100px', marginTop: '50px' }}
                         onClick={() => {
-                          embedMintNFt();
+                          embedEditionDropTL();
                           verifyNFT();
                         }}
                       >
                         {`Trusted Landlords Concession ERC-1155 NFT`}
+                      </Button>
+                    </div>
+                  </Box>
+                </Grid>
+              </div>
+
+              <div className="card" sx={{ marginTop: '24px' }}>
+                <Grid gap={2} columns={[2, '1fr 5fr']}>
+                  <Box>
+                    <img src="assets/UFCPLSR.png" sx={{ width: '50%' }}></img>
+                  </Box>
+                  <Box>
+                    <p>
+                      Get shares from the mining fee from the community Genesis
+                      Lands tax in $PLSR and help us to grow. Drop UFCPLSR
+                      tokens and will use the income from the sale to mint more
+                      Genesis lands NFT from the Pulsar game shop.
+                    </p>
+                    <div sx={{ textAlign: 'center' }}>
+                      <Button
+                        sx={{ height: '100px', marginTop: '50px' }}
+                        onClick={() => {
+                          embedDropUFCPLSR();
+                        }}
+                      >
+                        {`Drop UFC Pulsar ERC-20 tokens`}
                       </Button>
                     </div>
                   </Box>
@@ -1105,7 +1133,7 @@ const Home: NextPage = () => {
             <div className="card" sx={{ marginTop: '32px' }}>
               <Grid gap={2} columns={[2, '1fr 5fr']}>
                 <Box>
-                  <img src="assets/logo.png" sx={{ height: '200px' }}></img>
+                  <img src="assets/logo.png" sx={{ width: '100%' }}></img>
                 </Box>
                 <Box>
                   <p>
@@ -1135,9 +1163,35 @@ const Home: NextPage = () => {
                 </Box>
               </Grid>
             </div>
+
+            <div className="card" sx={{ marginTop: '24px' }}>
+              <Grid gap={2} columns={[2, '1fr 5fr']}>
+                <Box>
+                  <img src="assets/UFCPLSR.png" sx={{ width: '100%' }}></img>
+                </Box>
+                <Box>
+                  <p>
+                    Get shares from the mining fee from the community Genesis
+                    Lands tax in $PLSR and help us to grow. Drop UFCPLSR tokens
+                    and will use the income from the sale to mint more Genesis
+                    lands NFT from the Pulsar game shop.
+                  </p>
+                  <div sx={{ textAlign: 'center' }}>
+                    <Button
+                      sx={{ height: '100px', marginTop: '50px' }}
+                      onClick={() => {
+                        embedDropUFCPLSR();
+                      }}
+                    >
+                      {`Drop UFC Pulsar ERC-20 tokens`}
+                    </Button>
+                  </div>
+                </Box>
+              </Grid>
+            </div>
           </div>
         )}
-        <div sx={{ marginTop: '32px' }} id="embedMintNFt"></div>
+        <div sx={{ marginTop: '32px' }} id="embedDiv"></div>
       </main>
       <Footer />
     </>
