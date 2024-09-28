@@ -8,6 +8,8 @@ import {
   BUNDLE_DROP_ADDRESS,
   TOKEN_MODULE_ADDRESS,
   VOTE_MODULE_ADDRESS,
+  TREASURY_ERC20,
+  TREASURY_ERC721,
 } from 'utilities/addresses';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@components/Button';
@@ -18,7 +20,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DaoProposals } from '@components/DaoProposals';
 import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
-import { Embed, Image, Grid, Box } from 'theme-ui';
+import { Image, Grid, Box } from 'theme-ui';
+
+const DAO_PROPOSAL_DURATION = 172800000;
 
 if (
   !process.env.REACT_APP_PRIVATE_KEY ||
@@ -59,6 +63,82 @@ const LOGO = '/assets/logo.png';
 const TLL = '/assets/0.pscu-lldao.png';
 const UFC = '/assets/0.ufc.png';
 
+//////get vote treasury balanace of selected tokens
+var erc20treasturystate = false;
+var erc721treasturystate = false;
+function loadTreasuryERC20() {
+  if (erc20treasturystate == false) {
+    erc20treasturystate = true;
+    TREASURY_ERC20.map((token) => {
+      treasuryBalance(token.address);
+    });
+  } else {
+    $('#treasuryTable').html('');
+    erc20treasturystate = false;
+  }
+}
+
+function loadTreasuryERC721() {
+  if (erc721treasturystate == false) {
+    erc721treasturystate = true;
+    TREASURY_ERC721.map((token) => {
+      treasuryNFTBalance(token);
+    });
+  } else {
+    $('#treasuryNFTTable').html('');
+    erc721treasturystate = false;
+  }
+}
+
+async function treasuryBalance(address: string) {
+  voteModule
+    .balanceOfToken(address)
+    .then((tokens) => {
+      console.log('🚀 Dao  treasury', tokens);
+      $('#treasuryTable').append(
+        '<tr><td><img src="assets/' +
+          tokens.symbol +
+          '.png" alt="' +
+          tokens.name +
+          '" width="24px"></img></td><td>' +
+          tokens.name +
+          '</td><td>' +
+          tokens.symbol +
+          '</td><td>' +
+          tokens.value +
+          '</td></tr>',
+      );
+    })
+    .catch((err) => {
+      console.error('failed to get token', err);
+      return err;
+    });
+}
+
+async function treasuryNFTBalance(token: any) {
+  sdk
+    .getNFTModule(token.address)
+    .balanceOf(voteModule.address)
+    .then((tokens) => {
+      console.log('🚀 Dao  NFT', tokens);
+      $('#treasuryNFTTable').append(
+        '<tr><td><img src="assets/' +
+          token.name +
+          '.png" alt="' +
+          token.name +
+          '" width="24px"></img></td><td>' +
+          token.name +
+          '</td><td>' +
+          Number(tokens._hex) +
+          '</td></tr>',
+      );
+    })
+    .catch((err) => {
+      console.error('failed to get token', err);
+      return err;
+    });
+}
+
 const Home: NextPage = () => {
   const { connectWallet, address, avatar, domainName, error, provider } =
     useWeb3WithEns();
@@ -81,6 +161,78 @@ const Home: NextPage = () => {
   // The signer is required to sign transactions on the blockchain.
   // Without it we can only read data, not write.
   const signer = provider?.getSigner();
+
+  const UFCPLSRcard = (
+    <div className="card" sx={{ marginTop: '24px' }}>
+      <Grid gap={2} columns={[2, '1fr 5fr']}>
+        <Box>
+          <img src="assets/UFCPLSR.png" sx={{ width: '100%' }}></img>
+        </Box>
+        <Box>
+          <p>
+            Get shares from the mining fee from the community Genesis Lands tax
+            in $PLSR and help us to grow. Drop UFCPLSR tokens and we will use
+            the income from the sale to mint more Genesis lands NFT from the
+            Pulsar game shop.
+          </p>
+          <div sx={{ textAlign: 'center' }}>
+            <Button
+              sx={{ height: '50px', marginTop: '100px' }}
+              onClick={() => {
+                embedDropUFCPLSR();
+              }}
+            >
+              {`UFC Pulsar Drop ERC-20 tokens`}
+            </Button>
+          </div>
+        </Box>
+      </Grid>
+    </div>
+  );
+
+  const PSCUcard = (
+    <div className="card" sx={{ marginTop: '32px' }}>
+      <Grid gap={2} columns={[2, '1fr 5fr']}>
+        <Box>
+          <img src="assets/logo.png" sx={{ width: '100%' }}></img>
+        </Box>
+        <Box>
+          <p>
+            To become a premium member of the community you need to mint this
+            NFT token. Then you will have access to our ecosystem and you will
+            be able to invest in our lands. In addition of your corporation
+            claim token NFT, you will receive 60 MATIC as airdrop of game NFT of
+            your choice and you will be able to buy Corporations Claim
+            Concession NFT in our network on Polygon and Avalanche , the UFC Hat
+            software license NFT and moderation right over the discord server.
+            In addition with this NFT you will get 83 unique items of game
+            avatars.
+          </p>
+          <div sx={{ textAlign: 'center' }}>
+            <Button
+              sx={{ height: '50px', marginTop: '100px' }}
+              onClick={() => {
+                window.open(
+                  'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
+                  '_blank',
+                );
+              }}
+            >
+              {'Pulsar Star Corporations United ERC-721 NFT'}
+            </Button>
+          </div>
+        </Box>
+      </Grid>
+    </div>
+  );
+
+  const UFCCICON = (
+    <Image
+      sx={{ width: '24px', display: 'inline' }}
+      alt="UFCC"
+      src="/assets/UFCC.webp"
+    ></Image>
+  );
 
   type DelegateState = 'delegating' | 'delegated' | 'delegate';
 
@@ -436,7 +588,6 @@ const Home: NextPage = () => {
       var desc: any;
       var wallet: any;
       var amount: any;
-      // Create proposal to mint 420,000 new token to the treasury.
       if (
         $('#newMemberAddress').val() &&
         $('#newMemberDescription').val() &&
@@ -449,8 +600,17 @@ const Home: NextPage = () => {
         toast.error('Wrong input parameters');
         return;
       }
+      const proposalEnd = new Date(
+        Date.now() + DAO_PROPOSAL_DURATION,
+      ).toString();
       await voteModule.propose(
-        desc + 'Proposal parameters, wallet: ' + wallet + ' amount: ' + amount,
+        desc +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, wallet: ' +
+          wallet +
+          ' amount: ' +
+          amount,
         [
           {
             nativeTokenValue: 0,
@@ -474,7 +634,132 @@ const Home: NextPage = () => {
     }
   };
 
-  //make PROPOSAL Button function
+  //make PROPOSAL voting period
+  const proposalNewVotingPeriod = async () => {
+    if (!address) {
+      return;
+    }
+    const toastId = address;
+    setIsClaiming(true);
+    toast.info('🔨 Proposing...', { toastId, autoClose: false });
+
+    try {
+      var desc: any;
+      var period: any;
+      if (
+        $('#votingPeriodDuration').val() &&
+        $('#votingPeriodDescription').val()
+      ) {
+        desc = $('#votingPeriodDescription').val();
+        period = Number($('#votingPeriodDuration').val());
+      } else {
+        toast.error('Wrong input parameters');
+        return;
+      }
+      const proposalEnd = new Date(
+        Date.now() + DAO_PROPOSAL_DURATION,
+      ).toString();
+      console.log(
+        desc +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, voting period: ' +
+          period,
+      );
+      await voteModule.propose(
+        desc +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, voting period: ' +
+          period.toString(),
+        [
+          {
+            nativeTokenValue: 0,
+            transactionData: voteModule.contract.interface.encodeFunctionData(
+              'setVotingPeriod',
+              [period],
+            ),
+            toAddress: voteModule.address,
+          },
+        ],
+      );
+
+      console.log('✅ Successfully created proposal');
+    } catch (error) {
+      console.error('failed to create first proposal', error);
+    } finally {
+      setIsClaiming(false);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
+    }
+  };
+
+  //make PROPOSAL voting period
+  const proposalEditQuorum = async () => {
+    if (!address) {
+      return;
+    }
+    const toastId = address;
+    setIsClaiming(true);
+    toast.info('🔨 Proposing...', { toastId, autoClose: false });
+
+    try {
+      var desc: any;
+      var value: any;
+      if ($('#editQuorumValue').val() && $('#editQuorumDescription').val()) {
+        value = $('#editQuorumValue').val();
+        desc = $('#editQuorumDescription').val();
+        if (value <= 0 || value > 100) {
+          toast.error(
+            'Value of quorum ' + value + ' must be integer between 0 and 100',
+          );
+          return;
+        }
+      } else {
+        toast.error('Wrong input parameters ');
+        return;
+      }
+      const proposalEnd = new Date(
+        Date.now() + DAO_PROPOSAL_DURATION,
+      ).toString();
+      console.log(
+        desc +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, voting period: ' +
+          value,
+      );
+      await voteModule.propose(
+        desc +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, voting period: ' +
+          value.toString(),
+        [
+          {
+            nativeTokenValue: 0,
+            transactionData: voteModule.contract.interface.encodeFunctionData(
+              'setProposalThreshold',
+              [value],
+            ),
+            toAddress: voteModule.address,
+          },
+        ],
+      );
+
+      console.log('✅ Successfully created proposal');
+    } catch (error) {
+      console.error('failed to create first proposal', error);
+    } finally {
+      setIsClaiming(false);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
+    }
+  };
+
+  //make PROPOSAL send erc20
   const proposalsendERC20 = async () => {
     if (!address) {
       return;
@@ -503,9 +788,14 @@ const Home: NextPage = () => {
         toast.error('Wrong input parameters');
         return;
       }
+      const proposalEnd = new Date(
+        Date.now() + DAO_PROPOSAL_DURATION,
+      ).toString();
       await voteModule.propose(
         desc +
-          'Proposal parameters, contract: ' +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, contract: ' +
           contractInput +
           ' wallet: ' +
           wallet +
@@ -513,7 +803,6 @@ const Home: NextPage = () => {
           amount,
         [
           {
-            // Again, we're sending ourselves 0 ETH. Just sending our own token.
             nativeTokenValue: 0,
             transactionData: sdk
               .getTokenModule(contractInput)
@@ -539,7 +828,7 @@ const Home: NextPage = () => {
     }
   };
 
-  //make PROPOSAL Button function
+  //make PROPOSAL send erc721
   const proposalsendERC721 = async () => {
     if (!address) {
       return;
@@ -568,9 +857,14 @@ const Home: NextPage = () => {
         toast.error('Wrong input parameters');
         return;
       }
+      const proposalEnd = new Date(
+        Date.now() + DAO_PROPOSAL_DURATION,
+      ).toString();
       await voteModule.propose(
         desc +
-          'Proposal parameters, contract: ' +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, contract: ' +
           contractInput +
           ' wallet: ' +
           wallet +
@@ -680,6 +974,7 @@ const Home: NextPage = () => {
                         target="_blank"
                       >
                         {' '}
+                        {UFCCICON}
                         {TOKEN_MODULE_ADDRESS}
                       </a>
                     </em>
@@ -697,6 +992,56 @@ const Home: NextPage = () => {
                 </Box>
               </Grid>
 
+              <div className="stack">
+                <h2>Treasury</h2>
+                <details className="card" style={{ width: '100%' }}>
+                  <summary
+                    style={{ fontWeight: 700, userSelect: 'none' }}
+                    onClick={() => {
+                      loadTreasuryERC20();
+                    }}
+                  >
+                    {' '}
+                    {'ERC-20 tokens treasury'}
+                  </summary>
+                  <table sx={{ width: '100%' }}>
+                    <thead>
+                      <tr
+                        sx={{ '& th': { textAlign: 'left', width: '100vh' } }}
+                      >
+                        <th>Token</th>
+                        <th>Name</th>
+                        <th>Symbol</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="treasuryTable"></tbody>
+                  </table>
+                </details>
+
+                <details className="card" style={{ width: '100%' }}>
+                  <summary
+                    style={{ fontWeight: 700, userSelect: 'none' }}
+                    onClick={() => {
+                      loadTreasuryERC721();
+                    }}
+                  >
+                    {'ERC-721 NFTs collections treasury'}
+                  </summary>
+                  <table sx={{ width: '100%' }}>
+                    <thead>
+                      <tr
+                        sx={{ '& th': { textAlign: 'left', width: '100vh' } }}
+                      >
+                        <th>Collection</th>
+                        <th>Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="treasuryNFTTable"></tbody>
+                  </table>
+                </details>
+              </div>
               <DaoMembers members={memberList} />
 
               <div className="stack" aria-live="polite">
@@ -761,6 +1106,122 @@ const Home: NextPage = () => {
                             onClick={() =>
                               !isClaiming && proposalAddNewMember()
                             }
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                          >
+                            {isClaiming ? 'Proposing...' : `Make the Proposal`}
+                          </Button>
+                        </label>
+                      </fieldset>
+                    }
+                  </details>
+
+                  <details className="card" style={{ width: '100%' }}>
+                    <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+                      {'Modify voting period duration of the DAO'}
+                    </summary>
+                    {
+                      <fieldset
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          border: 'none',
+                        }}
+                        {...disabled}
+                      >
+                        <legend>
+                          {'Proposal to change the voting period of the DAO.'}
+                        </legend>
+                        <label
+                          style={{ width: '100%' }}
+                          htmlFor={'proposalTypes'}
+                        >
+                          <textarea
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            id={'votingPeriodDescription'}
+                            placeholder={'Proposal Description'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="number"
+                            id={'votingPeriodDuration'}
+                            placeholder={
+                              'Voting period in block (~2 sec on Avalanche)'
+                            }
+                          />
+                          <Button
+                            onClick={() =>
+                              !isClaiming && proposalNewVotingPeriod()
+                            }
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                          >
+                            {isClaiming ? 'Proposing...' : `Make the Proposal`}
+                          </Button>
+                        </label>
+                      </fieldset>
+                    }
+                  </details>
+
+                  <details className="card" style={{ width: '100%' }}>
+                    <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+                      {'Modify quorum pourcent of the DAO'}
+                    </summary>
+                    {
+                      <fieldset
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          border: 'none',
+                        }}
+                        {...disabled}
+                      >
+                        <legend>
+                          {
+                            'Proposal to change the approval treshold to accept proposal in the DAO.'
+                          }
+                        </legend>
+                        <label
+                          style={{ width: '100%' }}
+                          htmlFor={'proposalTypes'}
+                        >
+                          <textarea
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            id={'editQuorumDescription'}
+                            placeholder={'Proposal Description'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="number"
+                            id={'editQuorumValue'}
+                            placeholder={
+                              'Proposal approval threshold quorum (between 1 and 100)'
+                            }
+                          />
+                          <Button
+                            onClick={() => !isClaiming && proposalEditQuorum()}
                             style={{
                               width: '100%',
                               margin: '6px',
@@ -944,73 +1405,13 @@ const Home: NextPage = () => {
                 vote={vote}
                 votingState={votingState}
               />
+
+              {UFCPLSRcard}
             </div>
           ) : (
             <div>
-              <div className="card" sx={{ textAlign: 'center' }}>
-                <Box>
-                  <p>
-                    Welcome in the <em>Pulsar Star Corporation United</em>. To
-                    join this{' '}
-                    <a
-                      href="https://pulsar.game"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Pulsar
-                    </a>{' '}
-                    community reach us on{' '}
-                    <a
-                      href="https://discord.gg/dq2PaMmDbm"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Discord
-                    </a>
-                    .
-                  </p>
-                </Box>
-                <div>{dungeonVideo}</div>
-                <p>
-                  Unlocking dungeon lvl 200 during the Pulsar betatest, in may
-                  2024, with the best players of Pulsar. EagleRising,
-                  CryptoCoop, Rrose and StarCorps !
-                </p>
-              </div>
-              <div className="card" sx={{ marginTop: '32px' }}>
-                <Grid gap={2} columns={[2, '1fr 5fr']}>
-                  <Box>
-                    <img src="assets/logo.png" sx={{ width: '100%' }}></img>
-                  </Box>
-                  <Box>
-                    <p>
-                      To become a premium member of the community you need to
-                      mint this NFT token. Then you will have access to our
-                      ecosystem and you will be able to invest in our lands. In
-                      addition of your corporation claim token NFT, you will
-                      receive 60 MATIC as airdrop of game NFT of your choice and
-                      you will be able to buy Corporations Claim Concession NFT
-                      in our network on Polygon and Avalanche , the UFC Hat
-                      software license NFT and moderation right over the discord
-                      server. In addition with this NFT you will get 83 unique
-                      items of game avatars.
-                    </p>
-                    <div sx={{ textAlign: 'center' }}>
-                      <Button
-                        sx={{ height: '50px', marginTop: '100px' }}
-                        onClick={() => {
-                          window.open(
-                            'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
-                            '_blank',
-                          );
-                        }}
-                      >
-                        {'Pulsar Star Corporations United ERC-721 NFT'}
-                      </Button>
-                    </div>
-                  </Box>
-                </Grid>
-              </div>
+              {PSCUcard}
+
               <div className="card" sx={{ marginTop: '24px' }}>
                 <Grid gap={2} columns={[2, '1fr 5fr']}>
                   <Box>
@@ -1022,9 +1423,9 @@ const Home: NextPage = () => {
                       mint this Edition NFT. This Truested Landlords Concession
                       have $PLSR 5000 as assets and give the right to mine
                       Pulsar, Mineral, Gaz and Organic on the land. The DAO
-                      treasury is managerd by the holders of UFC Coin tokens.
-                      The DAO have a quorum of 60% and each proposal is active
-                      for 48 hours.
+                      treasury is managerd by the holders of {UFCCICON} UFC Coin
+                      tokens. The DAO have a quorum of 60% and each proposal is
+                      active for 48 hours.
                     </p>
                     <div sx={{ textAlign: 'center' }}>
                       <Button
@@ -1041,31 +1442,7 @@ const Home: NextPage = () => {
                 </Grid>
               </div>
 
-              <div className="card" sx={{ marginTop: '24px' }}>
-                <Grid gap={2} columns={[2, '1fr 5fr']}>
-                  <Box>
-                    <img src="assets/UFCPLSR.png" sx={{ width: '100%' }}></img>
-                  </Box>
-                  <Box>
-                    <p>
-                      Get shares from the mining fee from the community Genesis
-                      Lands tax in $PLSR and help us to grow. Drop UFCPLSR
-                      tokens and we will use the income from the sale to mint
-                      more Genesis lands NFT from the Pulsar game shop.
-                    </p>
-                    <div sx={{ textAlign: 'center' }}>
-                      <Button
-                        sx={{ height: '50px', marginTop: '100px' }}
-                        onClick={() => {
-                          embedDropUFCPLSR();
-                        }}
-                      >
-                        {`UFC Pulsar Drop ERC-20 tokens`}
-                      </Button>
-                    </div>
-                  </Box>
-                </Grid>
-              </div>
+              {UFCPLSRcard}
             </div>
           )
         ) : (
@@ -1102,65 +1479,9 @@ const Home: NextPage = () => {
               </p>
             </div>
 
-            <div className="card" sx={{ marginTop: '32px' }}>
-              <Grid gap={2} columns={[2, '1fr 5fr']}>
-                <Box>
-                  <img src="assets/logo.png" sx={{ width: '100%' }}></img>
-                </Box>
-                <Box>
-                  <p>
-                    To become a premium member of the community you need to mint
-                    this NFT token. Then you will have access to our ecosystem
-                    and you will be able to invest in our lands. In addition of
-                    your corporation claim token NFT, you will receive 60 MATIC
-                    as airdrop of game NFT of your choice and you will be able
-                    to buy Corporations Claim Concession NFT in our network on
-                    Polygon and Avalanche , the UFC Hat software license NFT and
-                    moderation right over the discord server. In addition with
-                    this NFT you will get 83 unique items of game avatars.
-                  </p>
-                  <div sx={{ textAlign: 'center' }}>
-                    <Button
-                      sx={{ height: '50px', marginTop: '100px' }}
-                      onClick={() => {
-                        window.open(
-                          'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
-                          '_blank',
-                        );
-                      }}
-                    >
-                      {'Pulsar Star Corporation United ERC-721 NFT'}
-                    </Button>
-                  </div>
-                </Box>
-              </Grid>
-            </div>
+            {PSCUcard}
 
-            <div className="card" sx={{ marginTop: '24px' }}>
-              <Grid gap={2} columns={[2, '1fr 5fr']}>
-                <Box>
-                  <img src="assets/UFCPLSR.png" sx={{ width: '100%' }}></img>
-                </Box>
-                <Box>
-                  <p>
-                    Get shares from the mining fee from the community Genesis
-                    Lands tax in $PLSR and help us to grow. Drop UFCPLSR tokens
-                    and we will use the income from the sale to mint more
-                    Genesis lands NFT from the Pulsar game shop.
-                  </p>
-                  <div sx={{ textAlign: 'center' }}>
-                    <Button
-                      sx={{ height: '50px', marginTop: '100px' }}
-                      onClick={() => {
-                        embedDropUFCPLSR();
-                      }}
-                    >
-                      {`UFC Pulsar Drop ERC-20 tokens`}
-                    </Button>
-                  </div>
-                </Box>
-              </Grid>
-            </div>
+            {UFCPLSRcard}
           </div>
         )}
         <div sx={{ marginTop: '32px' }} id="embedDiv"></div>

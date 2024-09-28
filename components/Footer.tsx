@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
               target="_blank"
               href="https://badgerscollectif.com"
             >
-              Badgers Collectif
+              Badgers Collectif <span aria-hidden="true">🦄</span>
             </a>
           </li>
           <li>
@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
               target="_blank"
               href="https://thirdweb.com"
             >
-              ThirdWeb <span aria-hidden="true">🦄</span>
+              ThirdWeb
             </a>
           </li>
         </ul>

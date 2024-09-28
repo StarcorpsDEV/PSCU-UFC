@@ -8,8 +8,22 @@ export const DaoMembers: React.FC<{ members: Member[] }> = ({ members }) => {
       <table className="card" sx={{ width: '100%' }}>
         <thead>
           <tr sx={{ '& th': { textAlign: 'left', width: '100vh' } }}>
-            <th>Address</th>
-            <th>Token Amount</th>
+            <th>
+              <img
+                width="48px"
+                src="assets/0.webp"
+                alt="ufcc"
+                sx={{ display: 'inline' }}
+              ></img>
+            </th>
+            <th>
+              <img
+                width="48px"
+                src="assets/ufcc.png"
+                alt="ufcc"
+                sx={{ display: 'inline' }}
+              ></img>
+            </th>
           </tr>
         </thead>
         <tbody>
