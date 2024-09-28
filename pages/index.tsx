@@ -970,21 +970,7 @@ const Home: NextPage = () => {
                     .
                   </p>
                 </Box>
-                <div>
-                  <video
-                    controls
-                    sx={{
-                      width: '100%',
-                      maxWidth: '1208px',
-                      height: '100%',
-                      marginTop: '32px',
-                    }}
-                  >
-                    {' '}
-                    <source src="dungeonrun.mp4"></source>
-                    {'Pulsar Star Corporation United community ERC-721 NFT'}
-                  </video>
-                </div>
+                <div>{dungeonVideo}</div>
                 <p>
                   Unlocking dungeon lvl 200 during the Pulsar betatest, in may
                   2024, with the best players of Pulsar. EagleRising,
@@ -1011,7 +997,7 @@ const Home: NextPage = () => {
                     </p>
                     <div sx={{ textAlign: 'center' }}>
                       <Button
-                        sx={{ height: '100px', marginTop: '50px' }}
+                        sx={{ height: '50px', marginTop: '100px' }}
                         onClick={() => {
                           window.open(
                             'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
@@ -1019,7 +1005,7 @@ const Home: NextPage = () => {
                           );
                         }}
                       >
-                        {'Pulsar Star Corporation United community ERC-721 NFT'}
+                        {'Pulsar Star Corporations United ERC-721 NFT'}
                       </Button>
                     </div>
                   </Box>
@@ -1042,7 +1028,7 @@ const Home: NextPage = () => {
                     </p>
                     <div sx={{ textAlign: 'center' }}>
                       <Button
-                        sx={{ height: '100px', marginTop: '50px' }}
+                        sx={{ height: '50px', marginTop: '100px' }}
                         onClick={() => {
                           embedEditionDropTL();
                           verifyNFT();
@@ -1058,7 +1044,7 @@ const Home: NextPage = () => {
               <div className="card" sx={{ marginTop: '24px' }}>
                 <Grid gap={2} columns={[2, '1fr 5fr']}>
                   <Box>
-                    <img src="assets/UFCPLSR.png" sx={{ width: '50%' }}></img>
+                    <img src="assets/UFCPLSR.png" sx={{ width: '100%' }}></img>
                   </Box>
                   <Box>
                     <p>
@@ -1069,12 +1055,12 @@ const Home: NextPage = () => {
                     </p>
                     <div sx={{ textAlign: 'center' }}>
                       <Button
-                        sx={{ height: '100px', marginTop: '50px' }}
+                        sx={{ height: '50px', marginTop: '100px' }}
                         onClick={() => {
                           embedDropUFCPLSR();
                         }}
                       >
-                        {`Drop UFC Pulsar ERC-20 tokens`}
+                        {`UFC Pulsar Drop ERC-20 tokens`}
                       </Button>
                     </div>
                   </Box>
@@ -1108,21 +1094,7 @@ const Home: NextPage = () => {
                   .
                 </p>
               </Box>
-              <div>
-                <video
-                  controls
-                  sx={{
-                    width: '100%',
-                    maxWidth: '1208px',
-                    height: '100%',
-                    marginTop: '32px',
-                  }}
-                >
-                  {' '}
-                  <source src="dungeonrun.mp4"></source>
-                  {'Pulsar Star Corporation United community ERC-721 NFT'}
-                </video>
-              </div>
+              <div>{dungeonVideo}</div>
               <p>
                 Unlocking dungeon lvl 200 during the Pulsar betatest, in may
                 2024, with the best players of Pulsar. EagleRising, CryptoCoop,
@@ -1149,7 +1121,7 @@ const Home: NextPage = () => {
                   </p>
                   <div sx={{ textAlign: 'center' }}>
                     <Button
-                      sx={{ height: '100px', marginTop: '50px' }}
+                      sx={{ height: '50px', marginTop: '100px' }}
                       onClick={() => {
                         window.open(
                           'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
@@ -1157,7 +1129,7 @@ const Home: NextPage = () => {
                         );
                       }}
                     >
-                      {'Pulsar Star Corporation United community ERC-721 NFT'}
+                      {'Pulsar Star Corporation United ERC-721 NFT'}
                     </Button>
                   </div>
                 </Box>
@@ -1178,12 +1150,12 @@ const Home: NextPage = () => {
                   </p>
                   <div sx={{ textAlign: 'center' }}>
                     <Button
-                      sx={{ height: '100px', marginTop: '50px' }}
+                      sx={{ height: '50px', marginTop: '100px' }}
                       onClick={() => {
                         embedDropUFCPLSR();
                       }}
                     >
-                      {`Drop UFC Pulsar ERC-20 tokens`}
+                      {`UFC Pulsar Drop ERC-20 tokens`}
                     </Button>
                   </div>
                 </Box>
@@ -1197,5 +1169,20 @@ const Home: NextPage = () => {
     </>
   );
 };
+
+const dungeonVideo = (
+  <video
+    controls
+    sx={{
+      width: '100%',
+      height: '100%',
+      marginTop: '32px',
+    }}
+  >
+    {' '}
+    <source src="dungeonrun.mp4" type="video/mp4"></source>
+    {'Pulsar Star Corporations United community ERC-721 NFT'}
+  </video>
+);
 
 export default Home;
