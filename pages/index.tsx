@@ -105,7 +105,7 @@ async function treasuryBalance(address: string) {
           '</td><td>' +
           tokens.symbol +
           '</td><td>' +
-          tokens.value +
+          tokens.displayValue +
           '</td></tr>',
       );
     })
