@@ -20,7 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DaoProposals } from '@components/DaoProposals';
 import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
-import { Image, Grid, Box } from 'theme-ui';
+import { Image, Grid, Box, Link } from 'theme-ui';
 
 const DAO_PROPOSAL_DURATION = 172800000;
 
@@ -100,7 +100,12 @@ async function treasuryBalance(address: string) {
           tokens.symbol +
           '.png" alt="' +
           tokens.name +
-          '" width="24px"></img></td><td>' +
+          '" width="24px"></img></td>' +
+          '<td><a style="font-size:12px;text-decoration:none;" href="https://snowtrace.io/address/' +
+          address +
+          '" rel="noreferrer" target="_blank"> ' +
+          address +
+          '</a></td><td>' +
           tokens.name +
           '</td><td>' +
           tokens.symbol +
@@ -126,7 +131,12 @@ async function treasuryNFTBalance(token: any) {
           token.name +
           '.png" alt="' +
           token.name +
-          '" width="24px"></img></td><td>' +
+          '" width="24px"></td><td>' +
+          '<a style="font-size:12px;text-decoration:none;" href="https://snowtrace.io/address/' +
+          token.address +
+          '" rel="noreferrer" target="_blank"> ' +
+          token.address +
+          '</a></img></div></td><td>' +
           token.name +
           '</td><td>' +
           Number(tokens._hex) +
@@ -1010,6 +1020,7 @@ const Home: NextPage = () => {
                         sx={{ '& th': { textAlign: 'left', width: '100vh' } }}
                       >
                         <th>Token</th>
+                        <th>Contract</th>
                         <th>Name</th>
                         <th>Symbol</th>
                         <th>Amount</th>
@@ -1034,6 +1045,7 @@ const Home: NextPage = () => {
                         sx={{ '& th': { textAlign: 'left', width: '100vh' } }}
                       >
                         <th>Collection</th>
+                        <th>Contract</th>
                         <th>Name</th>
                         <th>Amount</th>
                       </tr>
