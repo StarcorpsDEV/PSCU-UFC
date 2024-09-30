@@ -10,6 +10,7 @@ import {
   VOTE_MODULE_ADDRESS,
   TREASURY_ERC20,
   TREASURY_ERC721,
+  TREASURY_ERC1155,
 } from 'utilities/addresses';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@components/Button';
@@ -28,22 +29,7 @@ if (
   !process.env.REACT_APP_PRIVATE_KEY ||
   process.env.REACT_APP_PRIVATE_KEY == ''
 ) {
-  console.log('🛑 Private key not found.');
   process.env.REACT_APP_PRIVATE_KEY = '';
-}
-
-if (
-  !process.env.REACT_APP_PRIVATE_KEY ||
-  process.env.REACT_APP_PRIVATE_KEY == ''
-) {
-  console.log('🛑 Alchemy API URL not found.');
-}
-
-if (
-  !process.env.REACT_APP_DEFAUT_DAO_MEMBERS ||
-  process.env.REACT_APP_DEFAUT_DAO_MEMBERS == ''
-) {
-  console.log('🛑 Wallet Address not found.');
 }
 
 const sdk = new ThirdwebSDK(
@@ -60,12 +46,13 @@ const voteModule = sdk.getVoteModule(VOTE_MODULE_ADDRESS);
 
 const DEFAULT_AVATAR = '/assets/0.webp';
 const LOGO = '/assets/logo.png';
-const TLL = '/assets/0.pscu-lldao.png';
-const UFC = '/assets/0.ufc.png';
+const TLL = '/assets/pscu-tlc-size.png';
+const UFC = '/assets/pscu-ufc-size.png';
 
 //////get vote treasury balanace of selected tokens
 var erc20treasturystate = false;
 var erc721treasturystate = false;
+var erc1155treasturystate = false;
 function loadTreasuryERC20() {
   if (erc20treasturystate == false) {
     erc20treasturystate = true;
@@ -89,7 +76,17 @@ function loadTreasuryERC721() {
     erc721treasturystate = false;
   }
 }
-
+function loadTreasuryERC1155() {
+  if (erc1155treasturystate == false) {
+    erc1155treasturystate = true;
+    TREASURY_ERC1155.map((token) => {
+      treasuryEditionBalance(token);
+    });
+  } else {
+    $('#treasuryEditionTable').html('');
+    erc1155treasturystate = false;
+  }
+}
 async function treasuryBalance(address: string) {
   voteModule
     .balanceOfToken(address)
@@ -136,9 +133,42 @@ async function treasuryNFTBalance(token: any) {
           token.address +
           '" rel="noreferrer" target="_blank"> ' +
           token.address +
-          '</a></img></div></td><td>' +
+          '</a></td><td>' +
           token.name +
           '</td><td>' +
+          Number(tokens._hex) +
+          '</td></tr>',
+      );
+    })
+    .catch((err) => {
+      console.error('failed to get token', err);
+      return err;
+    });
+}
+
+async function treasuryEditionBalance(token: any) {
+  sdk
+    .getBundleDropModule(token.address)
+    .balanceOf(voteModule.address, 0)
+    .then((tokens) => {
+      console.log('🚀 Dao  Edition', tokens);
+      $('#treasuryEditionTable').append(
+        '<tr><td><img src="assets/' +
+          token.name +
+          '.png" alt="' +
+          token.name +
+          '" width="24px"></td><td>' +
+          '<a style="font-size:12px;text-decoration:none;" href="https://snowtrace.io/address/' +
+          token.address +
+          '" rel="noreferrer" target="_blank"> ' +
+          token.address +
+          '</a></td><td>' +
+          token.name +
+          '</td><td><img src="assets/' +
+          '0.webp" alt="' +
+          token.name +
+          '" width="24px">' +
+          '</td><td>0</td><td>' +
           Number(tokens._hex) +
           '</td></tr>',
       );
@@ -180,19 +210,97 @@ const Home: NextPage = () => {
         </Box>
         <Box>
           <p>
-            Get shares from the mining fee from the community Genesis Lands tax
-            in $PLSR and help us to grow. Drop UFCPLSR tokens and we will use
-            the income from the sale to mint more Genesis lands NFT from the
-            Pulsar game shop.
+            The UFC Pulsar tokens are always minted from this token drop
+            contract at a price of 0.04 USDC. The UFCPLSR can be staked in the
+            Refined Pulsar Corp. staking contrats to get a reward in UFCC or
+            USDC. Get shares from the mining fee from the community Genesis
+            lands and help us to grow. Drop UFCPLSR tokens and we will use the
+            income from the sale to mint more Genesis lands NFT from the Pulsar
+            game shop.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
-              sx={{ height: '50px', marginTop: '100px' }}
+              sx={{ height: '50px', marginTop: '24px' }}
               onClick={() => {
-                embedDropUFCPLSR();
+                embedDiv(
+                  'https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc20.html?contract=0x7A6bF020161dEab23913ccFa5bE43aD37AEB6CA8&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&theme=dark&primaryColor=red',
+                );
+                $('html, body').animate(
+                  { scrollTop: $(document).height() },
+                  1000,
+                );
               }}
             >
-              {`UFC Pulsar Drop ERC-20 tokens`}
+              {`UFC Pulsar ERC-20 Drop`}
+            </Button>
+          </div>
+        </Box>
+      </Grid>
+    </div>
+  );
+
+  const DEXCard = (
+    <div className="card" sx={{ marginTop: '24px' }}>
+      <Grid gap={2} columns={[2, '1fr 5fr']}>
+        <Box>
+          <img src="assets/UFCC.webp" sx={{ width: '100%' }}></img>
+        </Box>
+        <Box>
+          <p>
+            The Pulsar Star Corporation United Decentralized Exchange (DEX)
+            allow to interact with the community tokens liquidity pools on
+            Uniswap. You can trade UFC ressources tokens like UFC Pulsar token
+            (UFCPLSR) and UFC governancy tokens like UFC Coin (UFCC). The
+            Uniswap liquidity pools are mantained by the Union of Federated
+            Corporation which have the administration right over the contracts
+            and hold the Uniswap liquidity pool ERC-721 NFT in his treasury.
+          </p>
+          <div sx={{ textAlign: 'center' }}>
+            <Button
+              sx={{ height: '50px', marginTop: '24px' }}
+              onClick={() => {
+                embedDiv('https://pscu-dex.badgerscollectif.com');
+                $('html, body').animate(
+                  { scrollTop: $(document).height() },
+                  1000,
+                );
+              }}
+            >
+              {`PSCU DEX for tokens`}
+            </Button>
+          </div>
+        </Box>
+      </Grid>
+    </div>
+  );
+
+  const RPCCard = (
+    <div className="card" sx={{ marginTop: '24px' }}>
+      <Grid gap={2} columns={[2, '1fr 5fr']}>
+        <Box>
+          <img src="assets/rpc-size.webp" sx={{ width: '100%' }}></img>
+        </Box>
+        <Box>
+          <p>
+            The Refined Pulsar Corp. is happy to offer to the UFC Pulsar token
+            (UFCPLSR) holders the possibility to stake their tokens. Stake your
+            tokens right now to get a reward from the community ERC-20 staking
+            pools. You can get UFC Coin (UFCC) or USD Coin (USDC). The staking
+            pools are mantained by the Union of Federated Corporation which have
+            the administration right over the contracts.
+          </p>
+          <div sx={{ textAlign: 'center' }}>
+            <Button
+              sx={{ height: '50px', marginTop: '24px' }}
+              onClick={() => {
+                embedDiv('https://pscu-rpc.badgerscollectif.com');
+                $('html, body').animate(
+                  { scrollTop: $(document).height() },
+                  1000,
+                );
+              }}
+            >
+              {`RPC ERC-20 Staking`}
             </Button>
           </div>
         </Box>
@@ -220,7 +328,7 @@ const Home: NextPage = () => {
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
-              sx={{ height: '50px', marginTop: '100px' }}
+              sx={{ height: '50px', marginTop: '24px' }}
               onClick={() => {
                 window.open(
                   'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
@@ -228,7 +336,7 @@ const Home: NextPage = () => {
                 );
               }}
             >
-              {'Pulsar Star Corporations United ERC-721 NFT'}
+              {'Pulsar Star Corporations United ERC-721 Drop'}
             </Button>
           </div>
         </Box>
@@ -437,18 +545,15 @@ const Home: NextPage = () => {
       });
   }, [hasClaimedNFT, proposals, address]);
 
-  const embedEditionDropTL = async () => {
+  const embedDiv = async (url: string) => {
     setIsClaiming(true);
     return $('#embedDiv').html(
-      '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=orange" width="100%" height="600px" style="max-width:100%;" frameborder="0"></iframe>',
+      '<iframe src="' +
+        url +
+        '"  width="100%"    height="600px"    style="max-width:100%;"    frameborder="0"></iframe>',
     );
   };
-  const embedDropUFCPLSR = async () => {
-    setIsClaiming(true);
-    return $('#embedDiv').html(
-      '<iframe src="https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc20.html?contract=0x7A6bF020161dEab23913ccFa5bE43aD37AEB6CA8&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&theme=dark&primaryColor=red"  width="100%"    height="600px"    style="max-width:100%;"    frameborder="0"></iframe>',
-    );
-  };
+
   async function vote() {
     if (!address || isVoting || hasVoted) {
       return;
@@ -1055,7 +1160,34 @@ const Home: NextPage = () => {
                     <tbody id="treasuryNFTTable"></tbody>
                   </table>
                 </details>
+
+                <details className="card" style={{ width: '100%' }}>
+                  <summary
+                    style={{ fontWeight: 700, userSelect: 'none' }}
+                    onClick={() => {
+                      loadTreasuryERC1155();
+                    }}
+                  >
+                    {'ERC-1155 Edition collections treasury'}
+                  </summary>
+                  <table sx={{ width: '100%' }}>
+                    <thead>
+                      <tr
+                        sx={{ '& th': { textAlign: 'left', width: '100vh' } }}
+                      >
+                        <th>Collection</th>
+                        <th>Contract</th>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>TokenId</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="treasuryEditionTable"></tbody>
+                  </table>
+                </details>
               </div>
+
               <DaoMembers members={memberList} />
 
               <div className="stack" aria-live="polite">
@@ -1422,12 +1554,14 @@ const Home: NextPage = () => {
                 votingState={votingState}
               />
 
+              {DEXCard}
               {UFCPLSRcard}
+              {RPCCard}
             </div>
           ) : (
             <div>
               {PSCUcard}
-
+              {DEXCard}
               <div className="card" sx={{ marginTop: '24px' }}>
                 <Grid gap={2} columns={[2, '1fr 5fr']}>
                   <Box>
@@ -1439,16 +1573,22 @@ const Home: NextPage = () => {
                       mint this Edition NFT. This Truested Landlords Concession
                       have $PLSR 5000 as assets and give the right to mine
                       Pulsar, Mineral, Gaz and Organic on the land. The DAO
-                      treasury is managerd by the holders of {UFCCICON} UFC Coin
+                      treasury is managerd by the holders of UFC Coin (UFCC)
                       tokens. The DAO have a quorum of 60% and each proposal is
                       active for 48 hours.
                     </p>
                     <div sx={{ textAlign: 'center' }}>
                       <Button
-                        sx={{ height: '50px', marginTop: '100px' }}
+                        sx={{ height: '50px', marginTop: '24px' }}
                         onClick={() => {
-                          embedEditionDropTL();
+                          embedDiv(
+                            'https://embed.ipfscdn.io/ipfs/bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy/erc1155.html?contract=0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&tokenId=0&theme=dark&primaryColor=orange',
+                          );
                           verifyNFT();
+                          $('html, body').animate(
+                            { scrollTop: $(document).height() },
+                            1000,
+                          );
                         }}
                       >
                         {`Trusted Landlords Concession ERC-1155 NFT`}
@@ -1459,6 +1599,7 @@ const Home: NextPage = () => {
               </div>
 
               {UFCPLSRcard}
+              {RPCCard}
             </div>
           )
         ) : (
@@ -1487,17 +1628,32 @@ const Home: NextPage = () => {
                   .
                 </p>
               </Box>
-              <div>{dungeonVideo}</div>
+              <div>
+                <video
+                  controls
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    marginTop: '24px',
+                    marginBottom: '24px',
+                  }}
+                >
+                  {' '}
+                  <source src="dungeonrun.mp4" type="video/mp4"></source>
+                  {'Pulsar Star Corporations United community ERC-721 NFT'}
+                </video>
+              </div>
               <p>
                 Unlocking dungeon lvl 200 during the Pulsar betatest, in may
                 2024, with the best players of Pulsar. EagleRising, CryptoCoop,
-                Rrose and StarCorps !
+                Rrose and StarCorp !
               </p>
             </div>
 
             {PSCUcard}
-
+            {DEXCard}
             {UFCPLSRcard}
+            {RPCCard}
           </div>
         )}
         <div sx={{ marginTop: '32px' }} id="embedDiv"></div>
@@ -1506,20 +1662,5 @@ const Home: NextPage = () => {
     </>
   );
 };
-
-const dungeonVideo = (
-  <video
-    controls
-    sx={{
-      width: '100%',
-      height: '100%',
-      marginTop: '32px',
-    }}
-  >
-    {' '}
-    <source src="dungeonrun.mp4" type="video/mp4"></source>
-    {'Pulsar Star Corporations United community ERC-721 NFT'}
-  </video>
-);
 
 export default Home;

@@ -22,8 +22,9 @@ export const TREASURY_ERC20 = [
 export const TREASURY_ERC721 = [
   { name: 'Pulsar', address: '0x77B7e9909502a1D5F0B35Ea4B59b62406A1364e4' },
   { name: 'PSCU', address: '0xe8b1EDAcdeF73d442598Af0573DF2f244F866fb2' },
+  { name: 'UNI-V3-POS', address: '0x655C406EBFa14EE2006250925e54ec43AD184f8B' },
 ];
 
-const TREASURY_ERC1155 = [
+export const TREASURY_ERC1155 = [
   { name: 'TLC', address: '0x104F6A41d1BEe512D958FA2E7709Df6d45A36aC9' },
 ];
