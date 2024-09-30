@@ -1,5 +1,6 @@
 {
   "name": "pscu-ufc-dao-avax",
+  "description": "PSCU UFC",
   "version": "0.1.0",
   "private": true,
   "scripts": {
