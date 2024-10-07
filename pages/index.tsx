@@ -342,6 +342,42 @@ const Home: NextPage = () => {
     </div>
   );
 
+  const NFTMarketplaceCard = (
+    <div className="card" sx={{ marginTop: '24px' }}>
+      <Grid gap={2} columns={[2, '1fr 5fr']}>
+        <Box>
+          <img
+            src="https://pulsar.game/images/items/Genesis/Mothership.png"
+            sx={{ width: '100%' }}
+          ></img>
+        </Box>
+        <Box>
+          <p>
+            The Pulsar Star Corporations United NFTs Marketplace offe the
+            possibility to liste and to trade the NFTs from Pulsar collections.
+            This applications have marketplace contract on Polygon PoS and
+            Avalanche C-Chain. We will build more contracts on Ethereum mainnet,
+            Bnb chain and Pulsar mainnet if needed.
+          </p>
+          <div sx={{ textAlign: 'center' }}>
+            <Button
+              sx={{ height: '50px', marginTop: '24px' }}
+              onClick={() => {
+                embedDiv('https://pscu-nft.badgerscollectif.com');
+                $('html, body').animate(
+                  { scrollTop: $(document).height() },
+                  1000,
+                );
+              }}
+            >
+              {`PSCU ERC-721 Marketplace`}
+            </Button>
+          </div>
+        </Box>
+      </Grid>
+    </div>
+  );
+
   const UFCCICON = (
     <Image
       sx={{ width: '24px', display: 'inline' }}
@@ -1576,6 +1612,7 @@ const Home: NextPage = () => {
               {DEXCard}
               {UFCPLSRcard}
               {RPCCard}
+              {NFTMarketplaceCard}
             </div>
           ) : (
             <div>
@@ -1619,6 +1656,7 @@ const Home: NextPage = () => {
 
               {UFCPLSRcard}
               {RPCCard}
+              {NFTMarketplaceCard}
             </div>
           )
         ) : (
@@ -1673,6 +1711,7 @@ const Home: NextPage = () => {
             {DEXCard}
             {UFCPLSRcard}
             {RPCCard}
+            {NFTMarketplaceCard}
           </div>
         )}
         <div sx={{ marginTop: '32px' }} id="embedDiv"></div>
