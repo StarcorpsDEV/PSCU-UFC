@@ -6,6 +6,7 @@ import { ThirdwebWeb3Provider } from '@3rdweb/hooks';
 import Head from 'next/head';
 import { AvalancheNetworkId } from 'utilities/NetworkIds';
 import 'regenerator-runtime/runtime'; // The ThirdWeb useWeb3 hook seems to require this.
+import { Analytics } from '@vercel/analytics/react';
 
 const supportedChainIds = [AvalancheNetworkId];
 
@@ -25,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Analytics />
       <ThemeProvider theme={defaultTheme}>
         <ThirdwebWeb3Provider
           connectors={connectors}
