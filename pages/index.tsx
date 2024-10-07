@@ -353,11 +353,11 @@ const Home: NextPage = () => {
         </Box>
         <Box>
           <p>
-            The Pulsar Star Corporations United NFTs Marketplace offe the
-            possibility to liste and to trade the NFTs from Pulsar collections.
-            This applications have marketplace contract on Polygon PoS and
-            Avalanche C-Chain. We will build more contracts on Ethereum mainnet,
-            Bnb chain and Pulsar mainnet if needed.
+            The Pulsar Star Corporations United NFTs Marketplace offer the
+            possibility to make listing and to trade the NFTs from the Pulsar
+            collections. This applications have marketplaces contracs on Polygon
+            PoS and Avalanche C-Chain. We will build more contracts on Ethereum
+            mainnet, Bnb chain and Pulsar mainnet if needed.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
@@ -1618,6 +1618,7 @@ const Home: NextPage = () => {
             <div>
               {PSCUcard}
               {DEXCard}
+              {UFCPLSRcard}
               <div className="card" sx={{ marginTop: '24px' }}>
                 <Grid gap={2} columns={[2, '1fr 5fr']}>
                   <Box>
@@ -1653,8 +1654,6 @@ const Home: NextPage = () => {
                   </Box>
                 </Grid>
               </div>
-
-              {UFCPLSRcard}
               {RPCCard}
               {NFTMarketplaceCard}
             </div>
