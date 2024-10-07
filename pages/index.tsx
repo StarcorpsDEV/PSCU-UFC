@@ -43,12 +43,10 @@ const sdk = new ThirdwebSDK(
 const bundleDropModule = sdk.getBundleDropModule(BUNDLE_DROP_ADDRESS);
 const tokenModule = sdk.getTokenModule(TOKEN_MODULE_ADDRESS);
 const voteModule = sdk.getVoteModule(VOTE_MODULE_ADDRESS);
-
 const DEFAULT_AVATAR = '/assets/0.webp';
 const LOGO = '/assets/logo.png';
 const TLL = '/assets/pscu-tlc-size.png';
 const UFC = '/assets/pscu-ufc-size.png';
-
 //////get vote treasury balanace of selected tokens
 var erc20treasturystate = false;
 var erc721treasturystate = false;
@@ -374,20 +372,16 @@ const Home: NextPage = () => {
         // If balance is greater than 0, they have our NFT!
         if (balance.gt(0)) {
           setHasClaimedNFT(true);
-          console.log('🌟 this user has a membership NFT!');
-        } else {
-          console.log("😭 this user doesn't have a membership NFT.");
         }
       })
       .catch((error) => {
-        console.error('failed to nft balance', error);
         toast.error('Failed to get NFT balance');
       });
 
     if (!hasClaimedNFT) {
       setTimeout(() => {
         verifyNFT();
-      }, 10000);
+      }, 600000);
     }
   }
 
@@ -484,10 +478,8 @@ const Home: NextPage = () => {
         // If balance is greater than 0, they have our NFT!
         if (balance.gt(0)) {
           setHasClaimedNFT(true);
-          console.log('🌟 this user has a membership NFT!');
         } else {
           setHasClaimedNFT(false);
-          console.log("😭 this user doesn't have a membership NFT.");
         }
       })
       .catch((error) => {
@@ -515,7 +507,6 @@ const Home: NextPage = () => {
         console.log('🌈 Proposals:', proposals);
       })
       .catch((err) => {
-        console.error('failed to get proposals', err);
         toast.error('Failed to get proposals');
       });
   }, [hasClaimedNFT]);
@@ -604,6 +595,7 @@ const Home: NextPage = () => {
             const proposal = await voteModule.get(vote.proposalId);
             // then we check if the proposal is open for voting (state === 1 means it is open)
             if (proposal.state === 1) {
+              toast.info('Vote on active proposals');
               // if it is open for voting, we'll vote on it
               return voteModule.vote(vote.proposalId, vote.vote);
             }
@@ -622,18 +614,16 @@ const Home: NextPage = () => {
 
               //if the state is in state 4 (meaning that it is ready to be executed), we'll execute the proposal
               if (proposal.state === 4) {
+                toast.info('Execute Sucessfull proposal first');
                 return voteModule.execute(vote.proposalId);
               }
             }),
           );
           // if we get here that means we successfully voted, so let's set the "hasVoted" state to true
           setHasVoted(true);
-          // and log out a success message
-          console.log('successfully voted');
-          toast.success('🎉 Successfully voted!');
+          toast.success('🎉 Successfully execute!');
         } catch (err) {
-          console.error('failed to execute votes', err);
-          toast.error('Failed to execute votes');
+          toast.error('Failed to execute proposal');
         }
       } catch (err) {
         console.error('failed to vote', err);
@@ -690,7 +680,7 @@ const Home: NextPage = () => {
   const displayContents =
     hasMetaMask && address && error?.name !== 'UnsupportedChainIdError';
 
-  //make PROPOSAL Button function
+  //make PROPOSAL add member
   const proposalAddNewMember = async () => {
     if (!address) {
       return;
@@ -715,9 +705,11 @@ const Home: NextPage = () => {
         toast.error('Wrong input parameters');
         return;
       }
+
       const proposalEnd = new Date(
         Date.now() + DAO_PROPOSAL_DURATION,
       ).toString();
+
       await voteModule.propose(
         desc +
           ' proposal duration, ' +
@@ -725,12 +717,23 @@ const Home: NextPage = () => {
           ' proposal parameters, wallet: ' +
           wallet +
           ' amount: ' +
-          amount,
+          amount.toString(),
         [
           {
             nativeTokenValue: 0,
             transactionData: tokenModule.contract.interface.encodeFunctionData(
               'mint',
+              [
+                voteModule.address,
+                ethers.utils.parseUnits(amount.toString(), 18),
+              ],
+            ),
+            toAddress: tokenModule.address,
+          },
+          {
+            nativeTokenValue: 0,
+            transactionData: tokenModule.contract.interface.encodeFunctionData(
+              'transfer',
               [wallet, ethers.utils.parseUnits(amount.toString(), 18)],
             ),
             toAddress: tokenModule.address,
@@ -903,35 +906,51 @@ const Home: NextPage = () => {
         toast.error('Wrong input parameters');
         return;
       }
-      const proposalEnd = new Date(
-        Date.now() + DAO_PROPOSAL_DURATION,
-      ).toString();
-      await voteModule.propose(
-        desc +
-          ' proposal duration, ' +
-          proposalEnd +
-          ' proposal parameters, contract: ' +
-          contractInput +
-          ' wallet: ' +
-          wallet +
-          ' amount: ' +
-          amount,
-        [
-          {
-            nativeTokenValue: 0,
-            transactionData: sdk
-              .getTokenModule(contractInput)
-              .contract.interface.encodeFunctionData(
-                // We're doing a transfer from the treasury to our wallet.
-                'transfer',
-                [wallet, ethers.utils.parseUnits(amount.toString(), 18)],
-              ),
 
-            toAddress: contractInput,
-          },
-        ],
-      );
+      const inputDecimal = await sdk
+        .getTokenModule(contractInput)
+        .contract.decimals();
 
+      const walletAmount = await sdk
+        .getTokenModule(contractInput)
+        .contract.balanceOf(voteModule.address);
+
+      if (inputDecimal && Number(walletAmount) > amount) {
+        const proposalEnd = new Date(
+          Date.now() + DAO_PROPOSAL_DURATION,
+        ).toString();
+        await voteModule.propose(
+          desc +
+            ' proposal duration, ' +
+            proposalEnd +
+            ' proposal parameters, contract: ' +
+            contractInput +
+            ' wallet: ' +
+            wallet +
+            ' amount: ' +
+            amount,
+          [
+            {
+              nativeTokenValue: 0,
+              transactionData: sdk
+                .getTokenModule(contractInput)
+                .contract.interface.encodeFunctionData(
+                  // We're doing a transfer from the treasury to our wallet.
+                  'transfer',
+                  [
+                    wallet,
+                    ethers.utils.parseUnits(amount.toString(), inputDecimal),
+                  ],
+                ),
+
+              toAddress: contractInput,
+            },
+          ],
+        );
+      } else {
+        toast.error('Not enough token in the treasury');
+        return;
+      }
       console.log('✅ Successfully created proposal to send tokens');
     } catch (error) {
       console.error('failed to create proposal', error);
@@ -990,7 +1009,7 @@ const Home: NextPage = () => {
             // Again, we're sending ourselves 0 ETH. Just sending our own token.
             nativeTokenValue: 0,
             transactionData: sdk
-              .getDropModule(contractInput)
+              .getNFTModule(contractInput)
               .contract.interface.encodeFunctionData(
                 // We're doing a transfer from the treasury to our wallet.
                 'transferFrom',
@@ -1144,7 +1163,7 @@ const Home: NextPage = () => {
                       loadTreasuryERC721();
                     }}
                   >
-                    {'ERC-721 NFTs collections treasury'}
+                    {'ERC-721 NFTs treasury'}
                   </summary>
                   <table sx={{ width: '100%' }}>
                     <thead>
@@ -1168,7 +1187,7 @@ const Home: NextPage = () => {
                       loadTreasuryERC1155();
                     }}
                   >
-                    {'ERC-1155 Edition collections treasury'}
+                    {'ERC-1155 Editions treasury'}
                   </summary>
                   <table sx={{ width: '100%' }}>
                     <thead>
