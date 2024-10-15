@@ -5,7 +5,8 @@ import {
   RinkebyNetworkId,
   RopstenNetworkId,
   AvalancheNetworkId,
-  } from '../utilities/NetworkIds';
+  AmoyNetworkId,
+} from '../utilities/NetworkIds';
 
 export type NetworkInfo = Readonly<
   | {
@@ -27,9 +28,13 @@ export type NetworkInfo = Readonly<
   | {
       chainId: '0x5';
       networkVersion: typeof GoerliNetworkId;
-    }  
+    }
   | {
       chainId: '0xa86a';
       networkVersion: typeof AvalancheNetworkId;
+    }
+  | {
+      chainId: '0x13882';
+      networkVersion: typeof AmoyNetworkId;
     }
 >;

@@ -4,3 +4,4 @@ export const RopstenNetworkId = 3;
 export const RinkebyNetworkId = 4;
 export const GoerliNetworkId = 5;
 export const AvalancheNetworkId = 43114;
+export const AmoyNetworkId = 80002;

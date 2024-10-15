@@ -24,6 +24,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="description"
           content="PSCU - Union of Federated Corporations"
         />
+        <meta
+          name="keywords"
+          content="Union Federated Corp., UFC, PSCU, Pulsar, UFCC, UFCPLSR, ERC20, avax, avalanche, rts, video game"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Analytics />

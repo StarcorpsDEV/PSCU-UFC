@@ -280,12 +280,12 @@ const Home: NextPage = () => {
         </Box>
         <Box>
           <p>
-            The Refined Pulsar Corp. is happy to offer to the UFC Pulsar token
-            (UFCPLSR) holders the possibility to stake their tokens. Stake your
-            tokens right now to get a reward from the community ERC-20 staking
-            pools. You can get UFC Coin (UFCC) or USD Coin (USDC). The staking
-            pools are mantained by the Union of Federated Corporation which have
-            the administration right over the contracts.
+            The Refined Pulsar Corp. give to the UFC Pulsar token (UFCPLSR)
+            holders the possibility to stake their tokens. Stake your tokens
+            right now to get a reward from the community ERC-20 staking pools.
+            You can get UFC Coin (UFCC) or USD Coin (USDC). The staking pools
+            are mantained by the Union of Federated Corporation which have the
+            administration right over the contracts.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
@@ -317,12 +317,11 @@ const Home: NextPage = () => {
             To become a premium member of the community you need to mint this
             NFT token. Then you will have access to our ecosystem and you will
             be able to invest in our lands. In addition of your corporation
-            claim token NFT, you will receive 60 MATIC as airdrop of game NFT of
-            your choice and you will be able to buy Corporations Claim
-            Concession NFT in our network on Polygon and Avalanche , the UFC Hat
-            software license NFT and moderation right over the discord server.
-            In addition with this NFT you will get 83 unique items of game
-            avatars.
+            claim token NFT, you will receive 1000 UFCPLSR as airdrop of game
+            NFT of your choice and you will be able to buy Corporations Claim
+            Concession NFT in our network on Polygon and Avalanche and
+            moderation right over the discord server. In addition with this NFT
+            you will get an unique avatars items.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
@@ -357,7 +356,7 @@ const Home: NextPage = () => {
             possibility to make listing and to trade the NFTs from the Pulsar
             collections. This applications have marketplaces contracs on Polygon
             PoS and Avalanche C-Chain. We will build more contracts on Ethereum
-            mainnet, Bnb chain and Pulsar mainnet if needed.
+            mainnet, Bnb chain and Pulsar mainnet.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
@@ -759,24 +758,12 @@ const Home: NextPage = () => {
             nativeTokenValue: 0,
             transactionData: tokenModule.contract.interface.encodeFunctionData(
               'mint',
-              [
-                voteModule.address,
-                ethers.utils.parseUnits(amount.toString(), 18),
-              ],
-            ),
-            toAddress: tokenModule.address,
-          },
-          {
-            nativeTokenValue: 0,
-            transactionData: tokenModule.contract.interface.encodeFunctionData(
-              'transfer',
               [wallet, ethers.utils.parseUnits(amount.toString(), 18)],
             ),
             toAddress: tokenModule.address,
           },
         ],
       );
-
       console.log('✅ Successfully created proposal to mint tokens');
     } catch (error) {
       console.error('failed to create first proposal', error);
@@ -808,6 +795,14 @@ const Home: NextPage = () => {
         period = Number($('#votingPeriodDuration').val());
       } else {
         toast.error('Wrong input parameters');
+        return;
+      }
+      if (period <= 1000 || period > 1000000) {
+        toast.error(
+          'Period duration ' +
+            period +
+            ' must be integer between 1000 and 1000000',
+        );
         return;
       }
       const proposalEnd = new Date(
@@ -905,6 +900,74 @@ const Home: NextPage = () => {
       console.log('✅ Successfully created proposal');
     } catch (error) {
       console.error('failed to create first proposal', error);
+    } finally {
+      setIsClaiming(false);
+      setTimeout(() => {
+        toast.dismiss(toastId);
+      }, 3000);
+    }
+  };
+
+  //make PROPOSAL approve erc20
+  const proposalapproveERC20 = async () => {
+    if (!address) {
+      return;
+    }
+    const toastId = address;
+    setIsClaiming(true);
+    toast.info('🔨 Proposing...', { toastId, autoClose: false });
+
+    try {
+      var desc: any;
+      var token: any;
+      var amount: any;
+      var contractInput: any;
+
+      if (
+        $('#approveerc20Contract').val() &&
+        $('#approveerc20Description').val() &&
+        $('#approveerc20Amount').val()
+      ) {
+        desc = $('#approveerc20Description').val();
+        amount = $('#approveerc20Amount').val();
+        contractInput = $('#approveerc20Contract').val();
+      } else {
+        toast.error('Wrong input parameters');
+        return;
+      }
+
+      const inputDecimal = await sdk
+        .getTokenModule(contractInput)
+        .contract.decimals();
+
+      const proposalEnd = new Date(
+        Date.now() + DAO_PROPOSAL_DURATION,
+      ).toString();
+      await voteModule.propose(
+        desc +
+          ' proposal duration, ' +
+          proposalEnd +
+          ' proposal parameters, contract: ' +
+          contractInput +
+          ' amount: ' +
+          amount,
+        [
+          {
+            nativeTokenValue: 0,
+            transactionData: sdk
+              .getTokenModule(contractInput)
+              .contract.interface.encodeFunctionData('approve', [
+                voteModule.address,
+                ethers.utils.parseUnits(amount.toString(), inputDecimal),
+              ]),
+
+            toAddress: contractInput,
+          },
+        ],
+      );
+      console.log('✅ Successfully created proposal to send tokens');
+    } catch (error) {
+      console.error('failed to create proposal', error);
     } finally {
       setIsClaiming(false);
       setTimeout(() => {
@@ -1423,6 +1486,72 @@ const Home: NextPage = () => {
                           />
                           <Button
                             onClick={() => !isClaiming && proposalEditQuorum()}
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                          >
+                            {isClaiming ? 'Proposing...' : `Make the Proposal`}
+                          </Button>
+                        </label>
+                      </fieldset>
+                    }
+                  </details>
+
+                  <details className="card" style={{ width: '100%' }}>
+                    <summary style={{ fontWeight: 700, userSelect: 'none' }}>
+                      {'Approve ERC-20 with DAO treasury'}
+                    </summary>
+                    {
+                      <fieldset
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          border: 'none',
+                        }}
+                        {...disabled}
+                      >
+                        <legend>
+                          {'Proposal to approve token with treasury wallet:'}
+                        </legend>
+                        <label
+                          style={{ width: '100%' }}
+                          htmlFor={'proposalTypes'}
+                        >
+                          <textarea
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            id={'approveerc20Description'}
+                            placeholder={'Proposal Description'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="text"
+                            id={'approveerc20Contract'}
+                            placeholder={'Token contract'}
+                          />
+                          <input
+                            style={{
+                              width: '100%',
+                              margin: '6px',
+                              padding: '6px',
+                            }}
+                            type="number"
+                            id={'approveerc20Amount'}
+                            placeholder={'ERC-20 token amount'}
+                          />
+                          <Button
+                            onClick={() =>
+                              !isClaiming && proposalapproveERC20()
+                            }
                             style={{
                               width: '100%',
                               margin: '6px',
