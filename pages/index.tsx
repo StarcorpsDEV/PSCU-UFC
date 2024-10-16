@@ -1822,7 +1822,7 @@ const Home: NextPage = () => {
                   display: 'inline',
                 }}
               >
-                <iframe
+                <Embed
                   title="Jibekn Pulsar introduction"
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
@@ -1830,28 +1830,9 @@ const Home: NextPage = () => {
                   sx={{
                     marginTop: '24px',
                     marginBottom: '24px',
-                    marginRight: '6px',
-                    width: 'calc( 50% - 18px )',
-                    height: '450px',
                     frameBodred: '0',
                   }}
                   src="https://www.youtube.com/embed/RlyuiCjE1G8?si=TV-v72lLGjV5NjkH"
-                />
-
-                <iframe
-                  title="Jibekn Pulsar gameplay"
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  sx={{
-                    marginTop: '24px',
-                    marginBottom: '24px',
-                    marginLeft: '6px',
-                    width: 'calc( 50% - 18px )',
-                    height: '450px',
-                    frameBodred: '0',
-                  }}
-                  src="https://www.youtube.com/embed/2iK_hT5F5Hs?si=HrtWmmwvMsp-PxlN"
                 />
               </Box>{' '}
               <p>
