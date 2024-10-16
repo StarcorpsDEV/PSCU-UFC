@@ -316,12 +316,14 @@ const Home: NextPage = () => {
           <p>
             To become a premium member of the community you need to mint this
             NFT token. Then you will have access to our ecosystem and you will
-            be able to invest in our lands. In addition of your corporation
-            claim token NFT, you will receive 1000 UFCPLSR as airdrop of game
-            NFT of your choice and you will be able to buy Corporations Claim
-            Concession NFT in our network on Polygon and Avalanche and
-            moderation right over the discord server. In addition with this NFT
-            you will get an unique avatars items.
+            be able to invest in our lands. In addition of your community NFT
+            tokens, you will receive 1000 UFCPLSR as airdrop. You can use the
+            UFCPLSR to buy Pulsar game NFT from the PSCU NFTs Marketplace. You
+            will also have access to our private offer to get packs of Pulsar
+            NFT and the possibility to mint Corporations Claim Concessions
+            ERC-1155 NFTs in our network on Polygon and Avalanche. Finally you
+            will also get the moderation right over the discord server of the
+            community and unique avatars items.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
