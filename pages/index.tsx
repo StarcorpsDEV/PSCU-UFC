@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DaoProposals } from '@components/DaoProposals';
 import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
-import { Image, Grid, Box, Embed } from 'theme-ui';
+import { Image, Grid, Box } from 'theme-ui';
 
 const DAO_PROPOSAL_DURATION = 172800000;
 
@@ -1822,16 +1822,18 @@ const Home: NextPage = () => {
                   display: 'inline',
                 }}
               >
-                <Embed
+                <iframe
                   title="Jibekn Pulsar introduction"
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  allow="clipboard-write; encrypted-media; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                   sx={{
-                    marginTop: '24px',
-                    marginBottom: '24px',
-                    frameBodred: '0',
+                    padding: '24px',
+                    width: '100%',
+                    minHeight: '450px',
+                    height: '100%',
                   }}
+                  frameBorder="0"
                   src="https://www.youtube.com/embed/RlyuiCjE1G8?si=TV-v72lLGjV5NjkH"
                 />
               </Box>{' '}
