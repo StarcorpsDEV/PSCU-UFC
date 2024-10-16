@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DaoProposals } from '@components/DaoProposals';
 import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
-import { Image, Grid, Box, Link } from 'theme-ui';
+import { Image, Grid, Box, Embed } from 'theme-ui';
 
 const DAO_PROPOSAL_DURATION = 172800000;
 
@@ -1799,6 +1799,7 @@ const Home: NextPage = () => {
                     href="https://pulsar.game"
                     target="_blank"
                     rel="noreferrer"
+                    sx={{ textDecoration: 'none' }}
                   >
                     Pulsar
                   </a>{' '}
@@ -1807,31 +1808,59 @@ const Home: NextPage = () => {
                     href="https://discord.gg/dq2PaMmDbm"
                     target="_blank"
                     rel="noreferrer"
+                    sx={{ textDecoration: 'none' }}
                   >
                     Discord
                   </a>
                   .
                 </p>
               </Box>
-              <div>
-                <video
-                  controls
+              <Box
+                sx={{
+                  display: 'inline',
+                }}
+              >
+                <iframe
+                  title="Jibekn Pulsar introduction"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
                   sx={{
-                    width: '100%',
-                    height: '100%',
                     marginTop: '24px',
                     marginBottom: '24px',
+                    marginRight: '6px',
+                    width: 'calc( 50% - 18px )',
+                    height: '450px',
+                    frameBodred: '0',
                   }}
-                >
-                  {' '}
-                  <source src="dungeonrun.mp4" type="video/mp4"></source>
-                  {'Pulsar Star Corporations United community ERC-721 NFT'}
-                </video>
-              </div>
+                  src="https://www.youtube.com/embed/RlyuiCjE1G8?si=TV-v72lLGjV5NjkH"
+                />
+
+                <iframe
+                  title="Jibekn Pulsar gameplay"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                  sx={{
+                    marginTop: '24px',
+                    marginBottom: '24px',
+                    marginLeft: '6px',
+                    width: 'calc( 50% - 18px )',
+                    height: '450px',
+                    frameBodred: '0',
+                  }}
+                  src="https://www.youtube.com/embed/2iK_hT5F5Hs?si=HrtWmmwvMsp-PxlN"
+                />
+              </Box>{' '}
               <p>
-                Unlocking dungeon lvl 200 during the Pulsar betatest, in may
-                2024, with the best players of Pulsar. EagleRising, CryptoCoop,
-                Rrose and StarCorp !
+                <a
+                  href="https://www.youtube.com/@jibekn2950"
+                  target="_blank"
+                  rel="noreferrer"
+                  sx={{ textDecoration: 'none' }}
+                >
+                  Pulsar MMORTS betatest gameplay, October 2024, by Jibekn
+                </a>
               </p>
             </div>
 
