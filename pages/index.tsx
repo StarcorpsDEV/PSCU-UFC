@@ -310,28 +310,39 @@ const Home: NextPage = () => {
     <div className="card" sx={{ marginTop: '32px' }}>
       <Grid gap={2} columns={[2, '1fr 5fr']}>
         <Box>
-          <img src="assets/logo.png" sx={{ width: '100%' }}></img>
+          <img src="assets/PSCU_NFT.png" sx={{ width: '100%' }}></img>
         </Box>
         <Box>
           <p>
-            To become a premium member of the community you need to mint this
-            NFT token. Then you will have access to our ecosystem and you will
-            be able to invest in our lands. In addition of your community NFT
-            tokens, you will receive 1000 UFCPLSR as airdrop. You can use the
-            UFCPLSR to buy Pulsar game NFT from the PSCU NFTs Marketplace. You
-            will also have access to our private offer to get packs of Pulsar
-            NFT and the possibility to mint Corporations Claim Concessions
-            ERC-1155 NFTs in our network on Polygon and Avalanche. Finally you
-            will also get the moderation right over the discord server of the
-            community and unique avatars items.
+            This collection is designed for the community Pulsar Star
+            Corporation United in the MMORTS massively multiplayer real time
+            strategy game called Pulsar. To become a premium member of the
+            community you need to mint this NFT token. Then you will have the
+            right to mint new corporations concession claim token and have
+            access to our maps with. This collection is designed for the
+            community Pulsar Star Corporation United in the MMORTS massively
+            multiplayer real time strategy game called Pulsar. As member of the
+            PSCU you will have the privilege to buy Corporations Concession
+            Claim Points NFT in our networks and moderation right over the
+            discord server. You will have the right to buy at a preferential
+            price during the private sales of game NFTs when they happen. In
+            addition, with the membership you will receive 2000 UFCPLSR on
+            Avalanche/Polygon to buy game NFT of your choice from the PSCU NFTs
+            Marketplace or you can stake them to get UFCC and USDC as reward.
+            Finally, with this NFT you will get 1 from 40 unique items of the
+            PSCU gamer community as unique designed avatars for the visual
+            identity.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
               sx={{ height: '50px', marginTop: '24px' }}
               onClick={() => {
-                window.open(
-                  'https://opensea.io/collection/pulsar-star-corporation-united-matic/overview',
-                  '_blank',
+                embedDiv(
+                  'https://embed.ipfscdn.io/ipfs/bafybeicd3qfzelz4su7ng6n523virdsgobrc5pcbarhwqv3dj3drh645pi/?contract=0xEbc0d702f6dd3D4A8A6e3e38363bE357A84A6806&chain=%7B%22name%22%3A%22Avalanche+C-Chain%22%2C%22chain%22%3A%22AVAX%22%2C%22rpc%22%3A%5B%22https%3A%2F%2F43114.rpc.thirdweb.com%2F%24%7BTHIRDWEB_API_KEY%7D%22%5D%2C%22nativeCurrency%22%3A%7B%22name%22%3A%22Avalanche%22%2C%22symbol%22%3A%22AVAX%22%2C%22decimals%22%3A18%7D%2C%22shortName%22%3A%22avax%22%2C%22chainId%22%3A43114%2C%22testnet%22%3Afalse%2C%22slug%22%3A%22avalanche%22%2C%22icon%22%3A%7B%22url%22%3A%22ipfs%3A%2F%2FQmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9%2Favalanche%2F512.png%22%2C%22width%22%3A512%2C%22height%22%3A512%2C%22format%22%3A%22png%22%7D%7D&clientId=20a005c403f089b6b726937429862c33&theme=dark&primaryColor=yellow',
+                );
+                $('html, body').animate(
+                  { scrollTop: $(document).height() },
+                  1000,
                 );
               }}
             >
