@@ -316,22 +316,16 @@ const Home: NextPage = () => {
           <p>
             This collection is designed for the community Pulsar Star
             Corporation United in the MMORTS massively multiplayer real time
-            strategy game called Pulsar. To become a premium member of the
-            community you need to mint this NFT token. Then you will have the
-            right to mint new corporations concession claim token and have
-            access to our maps with. This collection is designed for the
-            community Pulsar Star Corporation United in the MMORTS massively
-            multiplayer real time strategy game called Pulsar. As member of the
-            PSCU you will have the privilege to buy Corporations Concession
-            Claim Points NFT in our networks and moderation right over the
-            discord server. You will have the right to buy at a preferential
-            price during the private sales of game NFTs when they happen. In
-            addition, with the membership you will receive 2000 UFCPLSR on
-            Avalanche/Polygon to buy game NFT of your choice from the PSCU NFTs
-            Marketplace or you can stake them to get UFCC and USDC as reward.
-            Finally, with this NFT you will get 1 from 40 unique items of the
-            PSCU gamer community as unique designed avatars for the visual
-            identity.
+            strategy game called Pulsar. As member of the PSCU you will have the
+            privilege to buy Corporations Concession Claim Points NFT in our
+            networks and moderation right over the discord server. You will have
+            the right to buy at a preferential price during the private sales of
+            game NFTs when they happen. In addition, with the membership you
+            will receive 2000 UFCPLSR on Avalanche/Polygon to buy game NFT of
+            your choice from the PSCU NFTs Marketplace or you can stake them to
+            get UFCC and USDC as reward. Finally, with this NFT you will get 1
+            from 40 unique items of the PSCU gamer community as unique designed
+            avatars for the visual identity.
           </p>
           <div sx={{ textAlign: 'center' }}>
             <Button
