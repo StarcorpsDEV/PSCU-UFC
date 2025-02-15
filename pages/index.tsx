@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DaoProposals } from '@components/DaoProposals';
 import { DaoMembers } from '@components/DaoMembers';
 import { Footer } from '@components/Footer';
-import { Image, Grid, Box } from 'theme-ui';
+import { Image, Grid, Box, Embed } from 'theme-ui';
 
 const DAO_PROPOSAL_DURATION = 172800000;
 
@@ -182,6 +182,7 @@ const Home: NextPage = () => {
     useWeb3WithEns();
 
   const [hasClaimedNFT, setHasClaimedNFT] = useState(false);
+  const [embedDivObj, setEmbedDivObj] = useState(<></>);
 
   // Amount of token each member has in state.
   const [memberTokenAmounts, setMemberTokenAmounts] = useState<
@@ -580,10 +581,17 @@ const Home: NextPage = () => {
 
   const embedDiv = async (url: string) => {
     setIsClaiming(true);
-    return $('#embedDiv').html(
-      '<iframe src="' +
-        url +
-        '"  width="100%"    height="600px"    style="max-width:100%;"    frameborder="0"></iframe>',
+    setEmbedDivObj(
+      <Embed
+        src={url}
+        sandbox={
+          'allow-scripts allow-same-origin allow-top-navigation allow-popups allow-forms'
+        }
+        width="100%"
+        height="600px"
+        style={{ maxWidth: '100%' }}
+        frameBorder={'0'}
+      ></Embed>,
     );
   };
 
@@ -1862,6 +1870,7 @@ const Home: NextPage = () => {
           </div>
         )}
         <div sx={{ marginTop: '32px' }} id="embedDiv"></div>
+        {embedDivObj}
       </main>
       <Footer />
     </>
