@@ -588,7 +588,7 @@ const Home: NextPage = () => {
           'allow-scripts allow-same-origin allow-top-navigation allow-popups allow-forms'
         }
         width="100%"
-        height="600px"
+        height="750px"
         style={{ maxWidth: '100%' }}
         frameBorder={'0'}
       ></Embed>,
